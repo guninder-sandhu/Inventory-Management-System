@@ -13,6 +13,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Inventory Management System</name>
 	<description>Microservice for managing inventory</description>
+	<packaging>pom</packaging>
 	<url/>
 	<licenses>
 		<license/>
@@ -70,6 +71,9 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	<modules>
+		<module>user-service</module>
+	</modules>
 
 	<build>
 		<plugins>
