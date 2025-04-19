@@ -1,5 +1,6 @@
 package com.inventory.product.exceptions;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -31,5 +32,11 @@ public class GlobalExceptionHandler {
         Map<String, Object> response = new HashMap<>();
         response.put("message", ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<String> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body("Cannot delete . Item you are deleting is being used by some other entity." + ex);
     }
 }

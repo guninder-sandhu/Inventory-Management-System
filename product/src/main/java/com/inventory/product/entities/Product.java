@@ -1,6 +1,6 @@
 package com.inventory.product.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -19,6 +19,9 @@ public class Product {
     @Id
     private String productId;
 
+    @Column(name = "product_code", unique = true, nullable = false)
+    private String productCode;
+
     @Column(name = "name", length = 100)
     private String productName;
 
@@ -34,9 +37,9 @@ public class Product {
     //Now when Jackson (used by Spring Boot for JSON serialization) tries to serialize ProductCategory, it sees:
     //ProductCategory → List<Product> → ProductCategory → List<Product> → ...
     //That’s an infinite loop, which crashes or creates a huge nested object.
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
-    @JsonIgnore
+    @JsonBackReference
     private ProductCategory productCategory;
 
     @Column(name = "quantity")

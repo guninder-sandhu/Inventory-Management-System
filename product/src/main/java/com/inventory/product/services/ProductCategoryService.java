@@ -8,14 +8,22 @@ public interface ProductCategoryService {
 
     ProductCategory createProductCategory(ProductCategory productCategory);
 
-    boolean updateProductCategory(String id, ProductCategory productCategory);
-
-    void deleteProductCategory(String id);
-
     List<ProductCategory> getProductCategories();
 
-    ProductCategory getProductCategory(String id);
+    ProductCategory getProductCategoryById(String id);
 
-    boolean checkProductCategoryExists(String id);
+    ProductCategory getProductCategoryByCode(String code);
+
+    boolean updateProductCategoryById(String id, ProductCategory productCategory);
+
+    boolean updateProductCategoryByCode(String code, ProductCategory productCategory);
+
+    boolean checkProductCategoryExistsById(String id);
+
+    boolean checkProductCategoryExistsByCode(String code);
+
+    void deleteProductCategoryById(String id);
+
+    void deleteProductCategoryByCode(String categoryCode);
 
 }

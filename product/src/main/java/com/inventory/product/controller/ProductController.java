@@ -26,10 +26,19 @@ public class ProductController {
         return new ResponseEntity<>(productService.createProduct(product), HttpStatus.CREATED);
     }
 
-    @GetMapping("/{productId}")
+    @GetMapping("/id/{productId}")
     public ResponseEntity<Map<String, Object>> getProduct(@PathVariable String productId) {
         Map<String, Object> response = new HashMap<>();
-        var product = productService.getProduct(productId);
+        var product = productService.getProductById(productId);
+        response.put("product", product);
+        response.put("message", "Success");
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/code/{productCode}")
+    public ResponseEntity<Map<String, Object>> getProductByCode(@PathVariable String productCode) {
+        Map<String, Object> response = new HashMap<>();
+        var product = productService.getProductByCode(productCode);
         response.put("product", product);
         response.put("message", "Success");
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -40,10 +49,10 @@ public class ProductController {
         return new ResponseEntity<>(productService.getAllProducts(), HttpStatus.OK);
     }
 
-    @PostMapping("/update/{productId}")
-    public ResponseEntity<Map<String, Object>> updateProduct(@PathVariable String productId, @RequestBody Product product) {
+    @PostMapping("/updateById/{productId}")
+    public ResponseEntity<Map<String, Object>> updateProductById(@PathVariable String productId, @RequestBody Product product) {
         Map<String, Object> response = new HashMap<>();
-        if (productService.updateProduct(productId, product)) {
+        if (productService.updateProductById(productId, product)) {
             response.put("productId", productId);
             response.put("message", "product is updated successfully");
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -53,11 +62,33 @@ public class ProductController {
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping("/delete/{productId}")
-    public ResponseEntity<Map<String, Object>> deleteProduct(@PathVariable String productId) {
+    @PostMapping("/update/{productCode}")
+    public ResponseEntity<Map<String, Object>> updateProduct(@PathVariable String productCode, @RequestBody Product product) {
         Map<String, Object> response = new HashMap<>();
-        productService.deleteProduct(productId);
+        if (productService.updateProductByCode(productCode, product)) {
+            response.put("productCode", productCode);
+            response.put("message", "product is updated successfully");
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+        response.put("productCode", productCode);
+        response.put("message", "product is not updated successfully");
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @PostMapping("/deleteById/{productId}")
+    public ResponseEntity<Map<String, Object>> deleteProductById(@PathVariable String productId) {
+        Map<String, Object> response = new HashMap<>();
+        productService.deleteProductById(productId);
         response.put("productId", productId);
+        response.put("message", "Product deleted successfully");
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PostMapping("/delete/{productCode}")
+    public ResponseEntity<Map<String, Object>> deleteProductByCode(@PathVariable String productCode) {
+        Map<String, Object> response = new HashMap<>();
+        productService.deleteProductByCode(productCode);
+        response.put("product Code", productCode);
         response.put("message", "Product deleted successfully");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

@@ -18,13 +18,17 @@ import java.util.List;
 @Table(name = "product_category")
 public class ProductCategory {
 
-    @OneToMany(mappedBy = "productCategory")
-    @JsonManagedReference
-    List<Product> products = new ArrayList<>();
     @Id
     @Column(name = "category_id")
     private String productCategoryId;
+
     @Column(name = "category_name")
     private String productCategoryName;
+
+    @OneToMany(mappedBy = "productCategory")
+    @JsonManagedReference
+    List<Product> products = new ArrayList<>();
+    @Column(name = "category_code", unique = true, nullable = false)
+    private String productCategoryCode;
 
 }

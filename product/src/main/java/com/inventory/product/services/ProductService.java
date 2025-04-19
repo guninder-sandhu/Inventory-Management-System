@@ -11,11 +11,15 @@ public interface ProductService {
 
     Product createProduct(Product product);
 
-    Product getProduct(String id);
+    Product getProductById(String id);
 
-    Boolean updateProduct(String id, Product product);
+    boolean updateProductById(String id, Product product);
 
-    void deleteProduct(String id);
+    boolean updateProductByCode(String code, Product product);
+
+    void deleteProductById(String id);
+
+    void deleteProductByCode(String code);
 
     List<Product> getProductFromName(String name);
 
@@ -26,4 +30,8 @@ public interface ProductService {
     List<Product> getProductsByCategory(ProductCategory category);
 
     boolean updateProductAddCategory(String id, ProductCategory category);
+
+    Product getProductByCode(String code);
+
+    boolean checkProductExistsByCode(String code);
 }

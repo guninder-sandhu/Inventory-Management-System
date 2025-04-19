@@ -15,8 +15,13 @@ public interface ProductRepository extends JpaRepository<Product, String> {
 
     List<Product> getProductsByProductName(String name);
 
+    Product getProductByProductCode(String code);
+
+    void deleteProductByProductCode(String code);
+
     @Modifying
     @Query("UPDATE Product SET productCategory = :category where productId= :id")
     void updateProductCategory(@Param("category") ProductCategory category, @Param("id") String id);
 
+    boolean existsByProductCode(String productCode);
 }
