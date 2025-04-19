@@ -1,6 +1,5 @@
-package com.inventory.userservice.exceptions;
+package com.inventory.product.exceptions;
 
-import com.inventory.userservice.payload.ApiResponse;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,12 +12,6 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ApiResponse> handleUserNotFoundException(UserNotFoundException exception) {
-        var message = exception.getMessage();
-        var apiResponse = ApiResponse.builder().message(message).success(true).status(HttpStatus.NOT_FOUND).build();
-        return new ResponseEntity<>(apiResponse, HttpStatus.NOT_FOUND);
-    }
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<Map<String, Object>> handleNotFoundException(NotFoundException ex) {
@@ -46,5 +39,4 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body("Cannot delete . Item you are deleting is being used by some other entity." + ex);
     }
-
 }
