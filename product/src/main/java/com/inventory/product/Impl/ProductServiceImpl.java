@@ -1,13 +1,16 @@
 package com.inventory.product.Impl;
 
 
+import com.inventory.product.dto.ProductDto;
 import com.inventory.product.entities.Product;
 import com.inventory.product.entities.ProductCategory;
+import com.inventory.product.exceptions.CreationException;
 import com.inventory.product.exceptions.DeletionException;
 import com.inventory.product.exceptions.NotFoundException;
 import com.inventory.product.exceptions.UpdateException;
 import com.inventory.product.repositories.ProductCountRepository;
 import com.inventory.product.repositories.ProductRepository;
+import com.inventory.product.services.ProductCategoryService;
 import com.inventory.product.services.ProductService;
 import jakarta.transaction.Transactional;
 import org.apache.commons.lang3.StringUtils;
@@ -21,28 +24,33 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository repository;
     private final ProductCountRepository productCountRepository;
+    private final ProductCategoryService productCategoryService;
 
-    public ProductServiceImpl(ProductRepository repository, ProductCountRepository productCountRepository) {
+    public ProductServiceImpl(ProductRepository repository, ProductCountRepository productCountRepository, ProductCategoryService productCategoryService) {
         this.repository = repository;
         this.productCountRepository = productCountRepository;
+        this.productCategoryService = productCategoryService;
     }
 
     @Override
     @Transactional
     public Product createProduct(Product product) {
-        var uniqueUUID = UUID.randomUUID().toString();
-        product.setProductId(uniqueUUID);
-        var productCount = getProductCount();
-        var code = generateProductCode(productCount);
-        product.setProductCode(code);
-        updateProductCount(++productCount);
-        return repository.save(product);
+        try {
+            var uniqueUUID = UUID.randomUUID().toString();
+            product.setProductId(uniqueUUID);
+            var productCount = getProductCount();
+            var code = generateProductCode(productCount);
+            product.setProductCode(code);
+            updateProductCount(++productCount);
+            return repository.save(product);
+        } catch (Exception e) {
+            throw new CreationException("Unable to create product");
+        }
     }
 
     private int getProductCount() {
         return productCountRepository.getProductCount();
     }
-
 
     public String generateProductCode(int productCount) {
         return String.format("PROD%05d", ++productCount);
@@ -123,6 +131,35 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public boolean checkProductExistsByCode(String productCode) {
         return repository.existsByProductCode(productCode);
+    }
+
+    @Override
+    @Transactional
+    public Product createProductFromDto(ProductDto productDto) {
+        var productCategoryName = productDto.getProductCategoryName();
+        if (StringUtils.isBlank(productCategoryName)) {
+            return createProduct(retrieveProduct(productDto));
+        }
+        try {
+            var productCategory = productCategoryService.getProductCategoriesByProductCategoryName(productCategoryName);
+            if(productCategory==null){
+                throw new CreationException("Unable to create product as Category " + productCategoryName + " does not exist");
+            }
+            Product product = retrieveProduct(productDto);
+            product.setProductCategory(productCategory);
+            return createProduct(product);
+        } catch (Exception e) {
+            throw new CreationException("Unable to create product "+ e.getMessage());
+        }
+    }
+
+    private Product retrieveProduct(ProductDto productDto) {
+        Product product = new Product();
+        product.setProductName(productDto.getProductName());
+        product.setProductDescription(productDto.getProductDescription());
+        product.setProductPrice(productDto.getProductPrice());
+        product.setQuantity(productDto.getQuantity());
+        return product;
     }
 
     @Override

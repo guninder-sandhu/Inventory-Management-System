@@ -1,5 +1,6 @@
 package com.inventory.product.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -27,6 +28,7 @@ public class ProductCategory {
 
     @OneToMany(mappedBy = "productCategory")
     @JsonManagedReference
+    @JsonIgnore
     List<Product> products = new ArrayList<>();
     @Column(name = "category_code", unique = true, nullable = false)
     private String productCategoryCode;
