@@ -65,6 +65,8 @@
 	</dependencies>
 	<modules>
 		<module>user-service</module>
+
+		<module>product</module>
 	</modules>
 
 	<build>
