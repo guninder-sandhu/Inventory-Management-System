@@ -10,4 +10,8 @@ public interface ProductCategoryRepository extends JpaRepository<ProductCategory
     void deleteProductCategoryByProductCategoryCode(String categoryCode);
 
     boolean existsByProductCategoryCode(String productCategoryCode);
+
+    boolean existsByProductCategoryName(String productCategoryName);
+
+    ProductCategory getProductCategoriesByProductCategoryName(String productCategoryName);
 }

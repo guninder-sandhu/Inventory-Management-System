@@ -1,6 +1,7 @@
 package com.inventory.product.services;
 
 
+import com.inventory.product.dto.ProductDto;
 import com.inventory.product.entities.Product;
 import com.inventory.product.entities.ProductCategory;
 
@@ -34,4 +35,6 @@ public interface ProductService {
     Product getProductByCode(String code);
 
     boolean checkProductExistsByCode(String code);
+
+    Product createProductFromDto(ProductDto productDto);
 }

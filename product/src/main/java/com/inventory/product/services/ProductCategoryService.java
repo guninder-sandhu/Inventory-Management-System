@@ -22,6 +22,10 @@ public interface ProductCategoryService {
 
     boolean checkProductCategoryExistsByCode(String code);
 
+    boolean checkProductCategoryExistsByName(String productCategoryName);
+
+    ProductCategory getProductCategoriesByProductCategoryName(String productCategoryName);
+
     void deleteProductCategoryById(String id);
 
     void deleteProductCategoryByCode(String categoryCode);

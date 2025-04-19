@@ -35,6 +35,9 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     @Override
     @Transactional
     public ProductCategory createProductCategory(ProductCategory productCategory) {
+        if (checkProductAlreadyExists(productCategory)) {
+            throw new CreationException("Product Category already exists");
+        }
         try {
             var uniqueUUID = UUID.randomUUID().toString();
             productCategory.setProductCategoryId(uniqueUUID);
@@ -46,6 +49,10 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
         } catch (Exception e) {
             throw new CreationException("Unable to create ProductCategory. " + e.getMessage());
         }
+    }
+
+    private boolean checkProductAlreadyExists(ProductCategory productCategory) {
+        return (repository.existsByProductCategoryName(productCategory.getProductCategoryName()));
     }
 
     private int getCategoryCount() {
@@ -143,6 +150,16 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     @Override
     public boolean checkProductCategoryExistsByCode(String code) {
         return repository.existsByProductCategoryCode(code);
+    }
+
+    @Override
+    public boolean checkProductCategoryExistsByName(String productCategoryName) {
+        return repository.existsByProductCategoryName(productCategoryName);
+    }
+
+    @Override
+    public ProductCategory getProductCategoriesByProductCategoryName(String productCategoryName) {
+        return repository.getProductCategoriesByProductCategoryName(productCategoryName);
     }
 
     @Override

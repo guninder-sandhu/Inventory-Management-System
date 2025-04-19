@@ -1,5 +1,6 @@
 package com.inventory.product.controller;
 
+import com.inventory.product.dto.ProductDto;
 import com.inventory.product.entities.Product;
 import com.inventory.product.entities.ProductCategory;
 import com.inventory.product.services.ProductService;
@@ -22,9 +23,12 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
-        return new ResponseEntity<>(productService.createProduct(product), HttpStatus.CREATED);
+    public ResponseEntity<Product> createProduct(@RequestBody ProductDto productDto) {
+
+        return new ResponseEntity<>(productService.createProductFromDto(productDto), HttpStatus.CREATED);
     }
+
+
 
     @GetMapping("/id/{productId}")
     public ResponseEntity<Map<String, Object>> getProduct(@PathVariable String productId) {
