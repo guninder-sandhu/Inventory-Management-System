@@ -55,6 +55,22 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+<!--            netflix-eureka had vulnerabilities,so changing internal dependencies to stable version-->
+            <dependency>
+                <groupId>com.thoughtworks.xstream</groupId>
+                <artifactId>xstream</artifactId>
+                <version>1.4.21</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>4.5.13</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>32.0.1-android</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
