@@ -1,0 +1,7 @@
+package com.inventory.stockservice.exceptions;
+
+public class ConflictException extends RuntimeException {
+    public ConflictException(String message) {
+        super(message);
+    }
+}
