@@ -26,9 +26,6 @@ public class ProductDto {
     @Schema(description = "Price per item", example = "2.99")
     private double productPrice;
 
-    @Schema(description = "Quantity in stock", example = "10")
-    private int quantity;
-
     @Schema(
             description = "Name of the category. Leave blank if you want to assign later.",
             example = "Beverages",

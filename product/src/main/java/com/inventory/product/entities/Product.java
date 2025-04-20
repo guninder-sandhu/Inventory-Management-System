@@ -42,9 +42,6 @@ public class Product {
     @JsonBackReference
     private ProductCategory productCategory;
 
-    @Column(name = "quantity")
-    private int quantity;
-
     //Add custom getter as we need category name in Product json
     // Bypasses the @JsonIgnore (because it’s a different method),
     //Adds a field productCategoryName to your JSON,
