@@ -3,110 +3,138 @@ package com.inventory.product.controller;
 import com.inventory.product.dto.ProductDto;
 import com.inventory.product.entities.Product;
 import com.inventory.product.entities.ProductCategory;
+import com.inventory.product.response.ApiResponse;
 import com.inventory.product.services.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
+/**
+ * Controller to manage product-related operations.
+ * <p>
+ * This controller provides endpoints for creating, retrieving, updating,
+ * and deleting product details. It also allows operations such as adding
+ * categories to products using various HTTP methods.
+ * <p>
+ * Endpoints:
+ * - Create a product
+ * - Retrieve a product by ID or code
+ * - Get a list of all products
+ * - Update a product by ID or code
+ * - Delete a product by ID or code
+ * - Add a category to a product
+ * <p>
+ * It uses a service layer to perform business logic and returns responses
+ * that include the status, timestamp, and data or message for each operation.
+ * <p>
+ * All endpoints return a generic API response containing the necessary information
+ * about the requested operation.
+ */
 @RestController
 @RequestMapping("/product")
 public class ProductController {
 
-    private final ProductService productService;
+    private final ProductService service;
 
-    public ProductController(ProductService productService) {
-        this.productService = productService;
+    public ProductController(ProductService service) {
+        this.service = service;
     }
 
     @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody ProductDto productDto) {
-
-        return new ResponseEntity<>(productService.createProductFromDto(productDto), HttpStatus.CREATED);
+    public ResponseEntity<ApiResponse<Product>> createProduct(@RequestBody ProductDto productDto) {
+        ApiResponse<Product> response = new ApiResponse<>(
+                "Product created successfully",
+                HttpStatus.CREATED.value(),
+                LocalDateTime.now(),
+                service.createProductFromDto(productDto));
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-
-
     @GetMapping("/id/{productId}")
-    public ResponseEntity<Map<String, Object>> getProduct(@PathVariable String productId) {
-        Map<String, Object> response = new HashMap<>();
-        var product = productService.getProductById(productId);
-        response.put("product", product);
-        response.put("message", "Success");
+    public ResponseEntity<ApiResponse<Product>> getProduct(@PathVariable String productId) {
+        ApiResponse<Product> response = new ApiResponse<>(
+                "Product retrieved successfully",
+                HttpStatus.OK.value(),
+                LocalDateTime.now(),
+                service.getProductById(productId));
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/code/{productCode}")
-    public ResponseEntity<Map<String, Object>> getProductByCode(@PathVariable String productCode) {
-        Map<String, Object> response = new HashMap<>();
-        var product = productService.getProductByCode(productCode);
-        response.put("product", product);
-        response.put("message", "Success");
+    public ResponseEntity<ApiResponse<Product>> getProductByCode(@PathVariable String productCode) {
+        ApiResponse<Product> response = new ApiResponse<>(
+                "Product retrieved successfully",
+                HttpStatus.OK.value(),
+                LocalDateTime.now(),
+                service.getProductByCode(productCode));
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping()
-    public ResponseEntity<List<Product>> getProducts() {
-        return new ResponseEntity<>(productService.getAllProducts(), HttpStatus.OK);
+    public ResponseEntity<ApiResponse<List<Product>>> getProducts() {
+        ApiResponse<List<Product>> response = new ApiResponse<>(
+                "Products retrieved successfully",
+                HttpStatus.OK.value(),
+                LocalDateTime.now(),
+                service.getAllProducts());
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/updateById/{productId}")
-    public ResponseEntity<Map<String, Object>> updateProductById(@PathVariable String productId, @RequestBody Product product) {
-        Map<String, Object> response = new HashMap<>();
-        if (productService.updateProductById(productId, product)) {
-            response.put("productId", productId);
-            response.put("message", "product is updated successfully");
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        }
-        response.put("productId", productId);
-        response.put("message", "product is not updated successfully");
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    public ResponseEntity<ApiResponse<Void>> updateProductById(@PathVariable String productId, @RequestBody Product product) {
+        service.updateProductById(productId, product);
+        ApiResponse<Void> response = new ApiResponse<>(
+                "Product " + productId + " Updated successfully",
+                HttpStatus.OK.value(),
+                LocalDateTime.now(),
+                null);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/update/{productCode}")
-    public ResponseEntity<Map<String, Object>> updateProduct(@PathVariable String productCode, @RequestBody Product product) {
-        Map<String, Object> response = new HashMap<>();
-        if (productService.updateProductByCode(productCode, product)) {
-            response.put("productCode", productCode);
-            response.put("message", "product is updated successfully");
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        }
-        response.put("productCode", productCode);
-        response.put("message", "product is not updated successfully");
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    public ResponseEntity<ApiResponse<Void>> updateProduct(@PathVariable String productCode, @RequestBody Product product) {
+        service.updateProductByCode(productCode, product);
+        ApiResponse<Void> response = new ApiResponse<>(
+                "Product " + productCode + " Updated successfully",
+                HttpStatus.OK.value(),
+                LocalDateTime.now(),
+                null);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/deleteById/{productId}")
-    public ResponseEntity<Map<String, Object>> deleteProductById(@PathVariable String productId) {
-        Map<String, Object> response = new HashMap<>();
-        productService.deleteProductById(productId);
-        response.put("productId", productId);
-        response.put("message", "Product deleted successfully");
+    public ResponseEntity<ApiResponse<Void>> deleteProductById(@PathVariable String productId) {
+        service.deleteProductById(productId);
+        ApiResponse<Void> response = new ApiResponse<>(
+                "Product " + productId + " deleted successfully",
+                HttpStatus.OK.value(),
+                LocalDateTime.now(),
+                null);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/delete/{productCode}")
-    public ResponseEntity<Map<String, Object>> deleteProductByCode(@PathVariable String productCode) {
-        Map<String, Object> response = new HashMap<>();
-        productService.deleteProductByCode(productCode);
-        response.put("product Code", productCode);
-        response.put("message", "Product deleted successfully");
+    public ResponseEntity<ApiResponse<Void>> deleteProductByCode(@PathVariable String productCode) {
+        service.deleteProductByCode(productCode);
+        ApiResponse<Void> response = new ApiResponse<>(
+                "Product " + productCode + " deleted successfully",
+                HttpStatus.OK.value(),
+                LocalDateTime.now(),
+                null);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/addCategory/{productId}")
-    public ResponseEntity<Map<String, Object>> addCategoryToProduct(@PathVariable String productId, @RequestBody ProductCategory category) {
-        Map<String, Object> response = new HashMap<>();
-        if (productService.updateProductAddCategory(productId, category)) {
-            response.put("productId", productId);
-            response.put("message", "category added to product");
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        }
-        response.put("productId", productId);
-        response.put("message", "product is not updated successfully");
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    public ResponseEntity<ApiResponse<Void>> addCategoryToProduct(@PathVariable String productId, @RequestBody ProductCategory category) {
+        service.updateProductAddCategory(productId, category);
+        ApiResponse<Void> response = new ApiResponse<>(
+                "Category " + category.getProductCategoryName() + " added to product " + productId + " successfully",
+                HttpStatus.OK.value(),
+                LocalDateTime.now(),
+                null);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

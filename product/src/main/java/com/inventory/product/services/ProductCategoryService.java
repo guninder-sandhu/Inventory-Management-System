@@ -14,9 +14,9 @@ public interface ProductCategoryService {
 
     ProductCategory getProductCategoryByCode(String code);
 
-    boolean updateProductCategoryById(String id, ProductCategory productCategory);
+    void updateProductCategoryById(String id, ProductCategory productCategory);
 
-    boolean updateProductCategoryByCode(String code, ProductCategory productCategory);
+    void updateProductCategoryByCode(String code, ProductCategory productCategory);
 
     boolean checkProductCategoryExistsById(String id);
 

@@ -4,10 +4,7 @@ package com.inventory.product.Impl;
 import com.inventory.product.dto.ProductDto;
 import com.inventory.product.entities.Product;
 import com.inventory.product.entities.ProductCategory;
-import com.inventory.product.exceptions.CreationException;
-import com.inventory.product.exceptions.DeletionException;
-import com.inventory.product.exceptions.NotFoundException;
-import com.inventory.product.exceptions.UpdateException;
+import com.inventory.product.exceptions.*;
 import com.inventory.product.repositories.ProductCountRepository;
 import com.inventory.product.repositories.ProductRepository;
 import com.inventory.product.services.ProductCategoryService;
@@ -69,13 +66,25 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public boolean updateProductById(String id, Product updatedProduct) {
-        return updateProduct(getProductById(id), updatedProduct);
+        try {
+            return updateProduct(getProductById(id), updatedProduct);
+        } catch (NotFoundException ne) {
+            throw ne;
+        } catch (Exception e) {
+            throw new UpdateException("Unable to update product " + id);
+        }
     }
 
     @Override
     @Transactional
     public boolean updateProductByCode(String code, Product product) {
-        return updateProduct(getProductByCode(code), product);
+        try {
+            return updateProduct(getProductByCode(code), product);
+        } catch (NotFoundException ne) {
+            throw ne;
+        } catch (Exception e) {
+            throw new UpdateException("Unable to update product " + code);
+        }
     }
 
     private boolean updateProduct(Product retrievedProduct, Product updatedProduct) {
@@ -117,10 +126,11 @@ public class ProductServiceImpl implements ProductService {
         }
         try {
             repository.deleteProductByProductCode(productCode);
+        } catch (NotFoundException ne) {
+            throw ne;
         } catch (Exception e) {
             throw new DeletionException("Unable to delete product with code " + productCode + e.getMessage());
         }
-
     }
 
     @Override
@@ -168,7 +178,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> getAllProducts() {
-        return repository.findAll();
+        try {
+            return repository.findAll();
+        } catch (Exception e) {
+            throw new RetrievalException("Unable to retrieve all products " + e.getMessage());
+        }
     }
 
     @Override
@@ -184,6 +198,8 @@ public class ProductServiceImpl implements ProductService {
         try {
             repository.updateProductCategory(category, id);
             return true;
+        } catch (NotFoundException ne) {
+            throw ne;
         } catch (Exception e) {
             throw new UpdateException("Error in adding product category to product " + id + " " + e.getMessage());
         }
@@ -193,7 +209,7 @@ public class ProductServiceImpl implements ProductService {
     public Product getProductByCode(String code) {
         var product = repository.getProductByProductCode(code);
         if (product == null) {
-            throw new NotFoundException("Unable to find product with code -" + code);
+            throw new NotFoundException("Unable to find product with code " + code);
         }
         return product;
     }

@@ -2,6 +2,7 @@ package com.inventory.userservice.impl;
 
 import com.inventory.userservice.entities.UserCount;
 import com.inventory.userservice.exceptions.CreationException;
+import com.inventory.userservice.exceptions.RetrievalException;
 import com.inventory.userservice.repositories.UserCountRepository;
 import com.inventory.userservice.services.UserCountService;
 import jakarta.annotation.PostConstruct;
@@ -32,7 +33,11 @@ public class UserCountServiceImpl implements UserCountService {
     }
     @Override
     public int getUserCountFromId() {
-        return repository.getUserCount();
+        try {
+            return repository.getUserCount();
+        } catch (Exception e) {
+            throw new RetrievalException("Unable to get User Count");
+        }
     }
 
     @Override

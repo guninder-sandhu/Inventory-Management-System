@@ -1,0 +1,1171 @@
+{
+  "info": {
+    "_postman_id": "d0cadfc4-bb57-4092-ae98-8cc1197d8a92",
+    "name": "inventory-usermicroservice",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "35954115"
+  },
+  "item": [
+    {
+      "name": "UserService",
+      "item": [
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"userName\": \"test2\",\r\n    \"firstName\": \"guninder\",\r\n    \"lastName\": \"sandhu\",\r\n    \"email\": \"test@yahoo2.com\",\r\n    \"phoneNumber\": 45678\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8081/users",
+              "host": [
+                "localhost"
+              ],
+              "port": "8081",
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "UpdateById",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n        \"userName\": \"hj\",\r\n        \"firstName\": \"guninder\",\r\n        \"lastName\": \"sandhu\",\r\n        \"email\": \"test@yahoo.com\",\r\n        \"phoneNumber\": 45678\r\n    }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8081/users/update/a4490c4a-1042-4d04-b9fb-d4a34b3f4e7e",
+              "host": [
+                "localhost"
+              ],
+              "port": "8081",
+              "path": [
+                "users",
+                "update",
+                "a4490c4a-1042-4d04-b9fb-d4a34b3f4e7e"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "UpdateByCode",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n        \"userName\": \"kjkk\",\r\n        \"firstName\": \"guninder\",\r\n        \"lastName\": \"sandhu\",\r\n        \"email\": \"test@yahoo.com\",\r\n        \"phoneNumber\": 45678\r\n    }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8081/users/update/code/EMP00005",
+              "host": [
+                "localhost"
+              ],
+              "port": "8081",
+              "path": [
+                "users",
+                "update",
+                "code",
+                "EMP00005"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DeleteById",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8081/users/delete/a4490c4a-1042-4d04-b9fb-d4a34b3f4e7e",
+              "host": [
+                "localhost"
+              ],
+              "port": "8081",
+              "path": [
+                "users",
+                "delete",
+                "a4490c4a-1042-4d04-b9fb-d4a34b3f4e7e"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DeleteByCode",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8081/users/delete/code/EMP00005",
+              "host": [
+                "localhost"
+              ],
+              "port": "8081",
+              "path": [
+                "users",
+                "delete",
+                "code",
+                "EMP00005"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Users",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8081/users",
+              "host": [
+                "localhost"
+              ],
+              "port": "8081",
+              "path": [
+                "users"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "ProductService",
+      "item": [
+        {
+          "name": "Product",
+          "item": [
+            {
+              "name": "Create product",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"productName\": \"test\",\r\n    \"productDescription\": \"test\", \r\n    \"productPrice\": 20.4,\r\n    \"quantity\": 4,\r\n    \"productCategoryName\": \"tresjkk\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:8082/product",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8082",
+                  "path": [
+                    "product"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "UpdateById",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \r\n    \"productName\": \"jhkjk\",\r\n    \"productDescription\": \"test\", \r\n    \"productPrice\": 20.4,\r\n   \"quantity\": 4\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:8082/product/updateById/0ff1ba5b-8634-4cb0-92c7-ba3db06562e1",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8082",
+                  "path": [
+                    "product",
+                    "updateById",
+                    "0ff1ba5b-8634-4cb0-92c7-ba3db06562e1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "UpdateByCode",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \r\n    \"productName\": \"jhkj\",\r\n    \"productDescription\": \"tedwewst\", \r\n    \"productPrice\": 20.4,\r\n   \"quantity\": 4\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:8082/product/update/PROD00001",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8082",
+                  "path": [
+                    "product",
+                    "update",
+                    "PROD00001"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "DeleteById",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \r\n    \"productName\": \"again\",\r\n    \"productDescription\": \"test\", \r\n    \"productPrice\": 20.4,\r\n   \"quantity\": 4\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:8082/product/deleteById/f4c5ab26-ba61-413d-8688-6b8694dbdc81",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8082",
+                  "path": [
+                    "product",
+                    "deleteById",
+                    "f4c5ab26-ba61-413d-8688-6b8694dbdc81"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "DeleteByCode",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:8082/product/delete/PROD00007",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8082",
+                  "path": [
+                    "product",
+                    "delete",
+                    "PROD00007"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get All Products",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8082/product",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8082",
+                  "path": [
+                    "product"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get ProductBYID",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8082/product/id/0ff1ba5b-8634-4cb0-92c7-ba3db06562e1",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8082",
+                  "path": [
+                    "product",
+                    "id",
+                    "0ff1ba5b-8634-4cb0-92c7-ba3db06562e1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GetProductByCode",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8082/product/code/PROD00001",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8082",
+                  "path": [
+                    "product",
+                    "code",
+                    "PROD00001"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "ProductCategory",
+          "item": [
+            {
+              "name": "CreateProductCategory",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var template = `\r",
+                      "<style type=\"text/css\">\r",
+                      "    .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+                      "    .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+                      "    .tftable tr {background-color:#ffffff;}\r",
+                      "    .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+                      "    .tftable tr:hover {background-color:#e0ffff;}\r",
+                      "</style>\r",
+                      "\r",
+                      "<table class=\"tftable\" border=\"1\">\r",
+                      "    <tr>\r",
+                      "        <th>Error Message</th>\r",
+                      "    </tr>\r",
+                      "    <tr>\r",
+                      "        <td>{{response.message}}</td>\r",
+                      "    </tr>\r",
+                      "</table>\r",
+                      "`;\r",
+                      "\r",
+                      "function constructVisualizerPayload() {\r",
+                      "    return {response: pm.response.json()}\r",
+                      "}\r",
+                      "\r",
+                      "pm.visualizer.set(template, constructVisualizerPayload());\r",
+                      "pm.test(\"Verify response format\", function () {\r",
+                      "    const response = pm.response.json();\r",
+                      "    pm.expect(response.message).to.be.a('string');\r",
+                      "    pm.expect(response.message).to.include('Unable to create ProductCategory');\r",
+                      "    pm.expect(response.message).to.include('Cannot invoke');\r",
+                      "    pm.expect(response.message).to.include('org.hibernate.metamodel.mapping.DiscriminatorType.getJdbcJavaType()');\r",
+                      "    pm.expect(response.message).to.include('this.discriminatorType');\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \r\n    \"productCategoryName\": \"tresjkkelechjhkjt\"\r\n   }",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:8082/product-category",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8082",
+                  "path": [
+                    "product-category"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "UpdateById",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var template = `\r",
+                      "<style type=\"text/css\">\r",
+                      "    .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+                      "    .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+                      "    .tftable tr {background-color:#ffffff;}\r",
+                      "    .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+                      "    .tftable tr:hover {background-color:#e0ffff;}\r",
+                      "</style>\r",
+                      "\r",
+                      "<table class=\"tftable\" border=\"1\">\r",
+                      "    <tr>\r",
+                      "        <th>Error Message</th>\r",
+                      "    </tr>\r",
+                      "    <tr>\r",
+                      "        <td>{{response.message}}</td>\r",
+                      "    </tr>\r",
+                      "</table>\r",
+                      "`;\r",
+                      "\r",
+                      "function constructVisualizerPayload() {\r",
+                      "    return {response: pm.response.json()}\r",
+                      "}\r",
+                      "\r",
+                      "pm.visualizer.set(template, constructVisualizerPayload());\r",
+                      "pm.test(\"Verify response format\", function () {\r",
+                      "    const response = pm.response.json();\r",
+                      "    pm.expect(response.message).to.be.a('string');\r",
+                      "    pm.expect(response.message).to.include('Unable to create ProductCategory');\r",
+                      "    pm.expect(response.message).to.include('Cannot invoke');\r",
+                      "    pm.expect(response.message).to.include('org.hibernate.metamodel.mapping.DiscriminatorType.getJdbcJavaType()');\r",
+                      "    pm.expect(response.message).to.include('this.discriminatorType');\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"productCategoryName\": \"muyt\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:8082/product-category/updateById/c36e8ef5-451c-480a-8b13-f0a35a24e8f7",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8082",
+                  "path": [
+                    "product-category",
+                    "updateById",
+                    "c36e8ef5-451c-480a-8b13-f0a35a24e8f7"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "DeleteById",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var template = `\r",
+                      "<style type=\"text/css\">\r",
+                      "    .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+                      "    .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+                      "    .tftable tr {background-color:#ffffff;}\r",
+                      "    .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+                      "    .tftable tr:hover {background-color:#e0ffff;}\r",
+                      "</style>\r",
+                      "\r",
+                      "<table class=\"tftable\" border=\"1\">\r",
+                      "    <tr>\r",
+                      "        <th>Error Message</th>\r",
+                      "    </tr>\r",
+                      "    <tr>\r",
+                      "        <td>{{response.message}}</td>\r",
+                      "    </tr>\r",
+                      "</table>\r",
+                      "`;\r",
+                      "\r",
+                      "function constructVisualizerPayload() {\r",
+                      "    return {response: pm.response.json()}\r",
+                      "}\r",
+                      "\r",
+                      "pm.visualizer.set(template, constructVisualizerPayload());\r",
+                      "pm.test(\"Verify response format\", function () {\r",
+                      "    const response = pm.response.json();\r",
+                      "    pm.expect(response.message).to.be.a('string');\r",
+                      "    pm.expect(response.message).to.include('Unable to create ProductCategory');\r",
+                      "    pm.expect(response.message).to.include('Cannot invoke');\r",
+                      "    pm.expect(response.message).to.include('org.hibernate.metamodel.mapping.DiscriminatorType.getJdbcJavaType()');\r",
+                      "    pm.expect(response.message).to.include('this.discriminatorType');\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"productCategoryName\": \"hkjhk\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:8082/product-category/deleteById/751f45c4-ed82-4ea4-b00f-aa19e6622995",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8082",
+                  "path": [
+                    "product-category",
+                    "deleteById",
+                    "751f45c4-ed82-4ea4-b00f-aa19e6622995"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "DeleteByCode",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var template = `\r",
+                      "<style type=\"text/css\">\r",
+                      "    .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+                      "    .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+                      "    .tftable tr {background-color:#ffffff;}\r",
+                      "    .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+                      "    .tftable tr:hover {background-color:#e0ffff;}\r",
+                      "</style>\r",
+                      "\r",
+                      "<table class=\"tftable\" border=\"1\">\r",
+                      "    <tr>\r",
+                      "        <th>Error Message</th>\r",
+                      "    </tr>\r",
+                      "    <tr>\r",
+                      "        <td>{{response.message}}</td>\r",
+                      "    </tr>\r",
+                      "</table>\r",
+                      "`;\r",
+                      "\r",
+                      "function constructVisualizerPayload() {\r",
+                      "    return {response: pm.response.json()}\r",
+                      "}\r",
+                      "\r",
+                      "pm.visualizer.set(template, constructVisualizerPayload());\r",
+                      "pm.test(\"Verify response format\", function () {\r",
+                      "    const response = pm.response.json();\r",
+                      "    pm.expect(response.message).to.be.a('string');\r",
+                      "    pm.expect(response.message).to.include('Unable to create ProductCategory');\r",
+                      "    pm.expect(response.message).to.include('Cannot invoke');\r",
+                      "    pm.expect(response.message).to.include('org.hibernate.metamodel.mapping.DiscriminatorType.getJdbcJavaType()');\r",
+                      "    pm.expect(response.message).to.include('this.discriminatorType');\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"productCategoryName\": \"hkjhk\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:8082/product-category/delete/CATG00009",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8082",
+                  "path": [
+                    "product-category",
+                    "delete",
+                    "CATG00009"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "UpdateByCode",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var template = `\r",
+                      "<style type=\"text/css\">\r",
+                      "    .tftable {font-size:14px;color:#333333;width:100%;border-width: 1px;border-color: #87ceeb;border-collapse: collapse;}\r",
+                      "    .tftable th {font-size:18px;background-color:#87ceeb;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;text-align:left;}\r",
+                      "    .tftable tr {background-color:#ffffff;}\r",
+                      "    .tftable td {font-size:14px;border-width: 1px;padding: 8px;border-style: solid;border-color: #87ceeb;}\r",
+                      "    .tftable tr:hover {background-color:#e0ffff;}\r",
+                      "</style>\r",
+                      "\r",
+                      "<table class=\"tftable\" border=\"1\">\r",
+                      "    <tr>\r",
+                      "        <th>Error Message</th>\r",
+                      "    </tr>\r",
+                      "    <tr>\r",
+                      "        <td>{{response.message}}</td>\r",
+                      "    </tr>\r",
+                      "</table>\r",
+                      "`;\r",
+                      "\r",
+                      "function constructVisualizerPayload() {\r",
+                      "    return {response: pm.response.json()}\r",
+                      "}\r",
+                      "\r",
+                      "pm.visualizer.set(template, constructVisualizerPayload());\r",
+                      "pm.test(\"Verify response format\", function () {\r",
+                      "    const response = pm.response.json();\r",
+                      "    pm.expect(response.message).to.be.a('string');\r",
+                      "    pm.expect(response.message).to.include('Unable to create ProductCategory');\r",
+                      "    pm.expect(response.message).to.include('Cannot invoke');\r",
+                      "    pm.expect(response.message).to.include('org.hibernate.metamodel.mapping.DiscriminatorType.getJdbcJavaType()');\r",
+                      "    pm.expect(response.message).to.include('this.discriminatorType');\r",
+                      "});\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \r\n    \"productCategoryName\": \"dwff\"\r\n   }",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "localhost:8082/product-category/update/CATG00001",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8082",
+                  "path": [
+                    "product-category",
+                    "update",
+                    "CATG00001"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GetAllCategories",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8082/product-category",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8082",
+                  "path": [
+                    "product-category"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GetCategoryById",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8082/product-category/id/c36e8ef5-451c-480a-8b13-f0a35a24e8f7",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8082",
+                  "path": [
+                    "product-category",
+                    "id",
+                    "c36e8ef5-451c-480a-8b13-f0a35a24e8f7"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GetCategoryByCode",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "localhost:8082/product-category/code/CATG00001",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8082",
+                  "path": [
+                    "product-category",
+                    "code",
+                    "CATG00001"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "StockService",
+      "item": [
+        {
+          "name": "Get Stocks",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:8083/stocks",
+              "host": [
+                "localhost"
+              ],
+              "port": "8083",
+              "path": [
+                "stocks"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Stocks ByCode",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:8083/stocks/ABC-123",
+              "host": [
+                "localhost"
+              ],
+              "port": "8083",
+              "path": [
+                "stocks",
+                "ABC-123"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Stocks",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"productCode\": \"ABC-1234\",\r\n  \"quantity\": 10020\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8083/stocks",
+              "host": [
+                "localhost"
+              ],
+              "port": "8083",
+              "path": [
+                "stocks"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update StockQuantityByCode",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"productCode\": \"ABC-123\",\r\n  \"quantity\": 10020\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8083/stocks/update-quantity?by=productCode&value=ABC-123&quantity=100&version=0",
+              "host": [
+                "localhost"
+              ],
+              "port": "8083",
+              "path": [
+                "stocks",
+                "update-quantity"
+              ],
+              "query": [
+                {
+                  "key": "by",
+                  "value": "productCode"
+                },
+                {
+                  "key": "value",
+                  "value": "ABC-123"
+                },
+                {
+                  "key": "quantity",
+                  "value": "100"
+                },
+                {
+                  "key": "version",
+                  "value": "0"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update StockQuantityById",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"productCode\": \"ABC-123\",\r\n  \"quantity\": 10020\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8083/stocks/update-quantity?by=stockId&value=ff561fb3-b1ad-435e-a43a-67f392696211&quantity=100&version=1",
+              "host": [
+                "localhost"
+              ],
+              "port": "8083",
+              "path": [
+                "stocks",
+                "update-quantity"
+              ],
+              "query": [
+                {
+                  "key": "by",
+                  "value": "stockId"
+                },
+                {
+                  "key": "value",
+                  "value": "ff561fb3-b1ad-435e-a43a-67f392696211"
+                },
+                {
+                  "key": "quantity",
+                  "value": "100"
+                },
+                {
+                  "key": "version",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Modify StockQuantityByCode",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"productCode\": \"ABC-123\",\r\n  \"quantity\": 10020\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8083/stocks/modify?by=productCode&value=ABC-123&quantity=990&version=2",
+              "host": [
+                "localhost"
+              ],
+              "port": "8083",
+              "path": [
+                "stocks",
+                "modify"
+              ],
+              "query": [
+                {
+                  "key": "by",
+                  "value": "productCode"
+                },
+                {
+                  "key": "value",
+                  "value": "ABC-123"
+                },
+                {
+                  "key": "quantity",
+                  "value": "990"
+                },
+                {
+                  "key": "version",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Modify StockQuantityById",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"productCode\": \"ABC-123\",\r\n  \"quantity\": 10020\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8083/stocks/modify?by=stockId&value=ff561fb3-b1ad-435e-a43a-67f392696211&quantity=1200&version=0",
+              "host": [
+                "localhost"
+              ],
+              "port": "8083",
+              "path": [
+                "stocks",
+                "modify"
+              ],
+              "query": [
+                {
+                  "key": "by",
+                  "value": "stockId"
+                },
+                {
+                  "key": "value",
+                  "value": "ff561fb3-b1ad-435e-a43a-67f392696211"
+                },
+                {
+                  "key": "quantity",
+                  "value": "1200"
+                },
+                {
+                  "key": "version",
+                  "value": "0"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete StockQuantityById",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"productCode\": \"ABC-123\",\r\n  \"quantity\": 10020\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8083/stocks/delete?by=stockId&value=252a26cc-ac98-418e-98c9-db22d9d57bfd",
+              "host": [
+                "localhost"
+              ],
+              "port": "8083",
+              "path": [
+                "stocks",
+                "delete"
+              ],
+              "query": [
+                {
+                  "key": "by",
+                  "value": "stockId"
+                },
+                {
+                  "key": "value",
+                  "value": "252a26cc-ac98-418e-98c9-db22d9d57bfd"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GetStockWithFilter",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"productCode\": \"ABC-123\",\r\n  \"quantity\": 10020\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:8083/stocks/filter?type=below&quantity=1000",
+              "host": [
+                "localhost"
+              ],
+              "port": "8083",
+              "path": [
+                "stocks",
+                "filter"
+              ],
+              "query": [
+                {
+                  "key": "type",
+                  "value": "below"
+                },
+                {
+                  "key": "quantity",
+                  "value": "1000"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
