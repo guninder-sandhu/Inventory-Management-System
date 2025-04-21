@@ -16,6 +16,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * StockController is a REST controller that manages operations related to stock management.
+ * It provides endpoints for retrieving, creating, updating, and deleting stock data, along
+ * with additional functionality for filtering and modifying stock based on specified criteria.
+ * <p>
+ * Endpoints:
+ * - `/stocks`: Retrieves all stocks.
+ * - `/stocks/{productCode}`: Retrieves stock details by product code.
+ * - `/stocks/filter`: Filters stock records based on quantity comparison type and value.
+ * - `/stocks/update-quantity`: Updates the stock quantity for a product or stock record.
+ * - `/stocks/modify`: Modifies the stock quantity by adding or subtracting a value.
+ * - `/stocks/delete`: Deletes stock records using product code or stock ID.
+ * <p>
+ * This controller interacts with the StockService layer to perform business logic and database operations.
+ */
 @RestController
 @RequestMapping("/stocks")
 public class StockController {
@@ -30,26 +45,47 @@ public class StockController {
     public ResponseEntity<ApiResponse<List<Stock>>> getStocks() {
         try {
             var stocks = service.findAll();
-            ApiResponse<List<Stock>> response = new ApiResponse<>("Stocks retrieved successfully", HttpStatus.OK.value(), LocalDateTime.now(), stocks);
+            ApiResponse<List<Stock>> response = new ApiResponse<>(
+                    "Stocks retrieved successfully",
+                    HttpStatus.OK.value(),
+                    LocalDateTime.now(),
+                    stocks);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             throw new RetrievalException("Unable to retrieve stocks at this time");
         }
     }
 
+    /**
+     * Retrieves stock details based on the provided product code.
+     *
+     * @param productCode the unique code of the product whose stock details are to be retrieved
+     * @return ResponseEntity containing an ApiResponse object with the stock details and status information
+     * @throws RetrievalException if there is an error retrieving the stock
+     */
     @GetMapping("/{productCode}")
-    public ResponseEntity<Stock> getStockByCode(@PathVariable String productCode) {
+    public ResponseEntity<ApiResponse<Stock>> getStockByCode(@PathVariable String productCode) {
         try {
-            return new ResponseEntity<>(service.findByProductCode(productCode), HttpStatus.OK);
+            ApiResponse<Stock> response = new ApiResponse<>(
+                    "Stock retrieved successfully",
+                    HttpStatus.OK.value(),
+                    LocalDateTime.now(),
+                    service.findByProductCode(productCode));
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             throw new RetrievalException("Unable to retrieve stocks at this time");
         }
     }
 
     @PostMapping
-    public ResponseEntity<Stock> createStock(@RequestBody Stock stock) {
+    public ResponseEntity<ApiResponse<Stock>> createStock(@RequestBody Stock stock) {
         try {
-            return new ResponseEntity<>(service.createStock(stock), HttpStatus.CREATED);
+            ApiResponse<Stock> response = new ApiResponse<>(
+                    "Stock created successfully",
+                    HttpStatus.CREATED.value(),
+                    LocalDateTime.now(),
+                    service.createStock(stock));
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
             throw new CreationException("Unable to create stock " + e.getMessage());
         }

@@ -14,6 +14,27 @@ The **Inventory Management System** is a microservices-based application designe
 - Uses **PostgreSQL** as its database.
 - RESTful APIs to handle product-related data.
 
+### 3. `stock-service`
+
+- Manages the stock levels and quantities of products.
+- Uses **MySQL** as its database.
+- Provides RESTful APIs for:
+    - Retrieving stock levels.
+    - Filtering stock based on quantity.
+    - Updating stock quantities (overriding or adjusting).
+    - Creating new stock entries.
+    - Deleting stock entries.
+
+### 4. `service-registry`
+
+- Acts as a **Netflix Eureka Server**, providing a central registry for all microservices within the Inventory
+  Management System.
+- Enables **service discovery**, allowing microservices to dynamically register themselves and discover the network
+  locations of other registered services.
+- No dedicated database is typically required as Eureka Server manages its state in memory.
+- Provides a web-based dashboard (usually accessible at `http://localhost:8761` by default) for monitoring registered
+  services.
+
 ## 🛠 Tech Stack
 
 - **Java 17**
