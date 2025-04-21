@@ -23,4 +23,12 @@ public interface UserServices {
 
     void updateUserById(String userId, User user);
 
+    void updateUserByCode(String userCode, User user);
+
+    void deleteUserByCode(String userCode);
+
+    User getUserByCode(String userCode);
+
+    void deleteAllUsers();
+
 }

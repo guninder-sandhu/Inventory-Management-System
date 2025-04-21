@@ -3,7 +3,7 @@ package com.inventory.product.controller;
 import com.inventory.product.dto.ProductDto;
 import com.inventory.product.entities.Product;
 import com.inventory.product.entities.ProductCategory;
-import com.inventory.product.repsonse.ApiResponse;
+import com.inventory.product.response.ApiResponse;
 import com.inventory.product.services.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

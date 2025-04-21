@@ -1,6 +1,6 @@
 package com.inventory.product.exceptions;
 
-import com.inventory.product.repsonse.ApiResponse;
+import com.inventory.product.response.ApiResponse;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

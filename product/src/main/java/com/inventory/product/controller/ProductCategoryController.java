@@ -1,7 +1,7 @@
 package com.inventory.product.controller;
 
 import com.inventory.product.entities.ProductCategory;
-import com.inventory.product.repsonse.ApiResponse;
+import com.inventory.product.response.ApiResponse;
 import com.inventory.product.services.ProductCategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

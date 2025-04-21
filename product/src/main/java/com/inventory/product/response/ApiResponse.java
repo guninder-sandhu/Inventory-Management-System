@@ -1,4 +1,4 @@
-package com.inventory.product.repsonse;
+package com.inventory.product.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
