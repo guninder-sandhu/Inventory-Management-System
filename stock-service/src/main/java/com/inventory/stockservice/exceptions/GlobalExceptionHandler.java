@@ -23,6 +23,17 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(UpdateException.class)
+    public ResponseEntity<ApiResponse<Void>> handleUpdateException(UpdateException ex) {
+        ApiResponse<Void> response = new ApiResponse<>(
+                ex.getMessage(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                LocalDateTime.now(),
+                null // No data
+        );
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @ExceptionHandler(DeletionException.class)
     public ResponseEntity<ApiResponse<Void>> handleDeletionException(DeletionException ex) {
         ApiResponse<Void> response = new ApiResponse<>(

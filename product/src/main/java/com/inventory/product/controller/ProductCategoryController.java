@@ -1,15 +1,27 @@
 package com.inventory.product.controller;
 
 import com.inventory.product.entities.ProductCategory;
+import com.inventory.product.repsonse.ApiResponse;
 import com.inventory.product.services.ProductCategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
+/**
+ * Controller to manage operations related to product categories.
+ * Provides endpoints to create, retrieve, update, and delete product categories
+ * by ID or by category code.
+ * <p>
+ * Endpoints include:
+ * - Creating a new product category
+ * - Fetching all product categories
+ * - Fetching a category by ID or code
+ * - Updating a category by ID or code
+ * - Deleting a category by ID or code
+ */
 @RestController
 @RequestMapping("/product-category")
 public class ProductCategoryController {
@@ -21,75 +33,87 @@ public class ProductCategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<ProductCategory> createProductCategory(@RequestBody ProductCategory category) {
-        var productCategory = service.createProductCategory(category);
-        return new ResponseEntity<>(productCategory, HttpStatus.CREATED);
+    public ResponseEntity<ApiResponse<ProductCategory>> createProductCategory(@RequestBody ProductCategory category) {
+        ApiResponse<ProductCategory> response = new ApiResponse<>(
+                "Category created successfully",
+                HttpStatus.CREATED.value(),
+                LocalDateTime.now(),
+                service.createProductCategory(category));
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/id/{categoryId}")
-    public ResponseEntity<Map<String, Object>> getProductCategory(@PathVariable String categoryId) {
-        Map<String, Object> response = new HashMap<>();
-        var product = service.getProductCategoryById(categoryId);
-        response.put("category", product);
-        response.put("message", "Success");
+    public ResponseEntity<ApiResponse<ProductCategory>> getProductCategory(@PathVariable String categoryId) {
+        ApiResponse<ProductCategory> response = new ApiResponse<>(
+                "Category retrieved successfully",
+                HttpStatus.OK.value(),
+                LocalDateTime.now(),
+                service.getProductCategoryById(categoryId));
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/code/{categoryCode}")
-    public ResponseEntity<Map<String, Object>> getProductCategoryByCode(@PathVariable String categoryCode) {
-        Map<String, Object> response = new HashMap<>();
-        var product = service.getProductCategoryByCode(categoryCode);
-        response.put("category", product);
-        response.put("message", "Success");
+    public ResponseEntity<ApiResponse<ProductCategory>> getProductCategoryByCode(@PathVariable String categoryCode) {
+        ApiResponse<ProductCategory> response = new ApiResponse<>(
+                "Category retrieved successfully",
+                HttpStatus.OK.value(),
+                LocalDateTime.now(),
+                service.getProductCategoryByCode(categoryCode));
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping()
-    public ResponseEntity<List<ProductCategory>> getAllProductCategories() {
-        return new ResponseEntity<>(service.getProductCategories(), HttpStatus.OK);
+    public ResponseEntity<ApiResponse<List<ProductCategory>>> getAllProductCategories() {
+        ApiResponse<List<ProductCategory>> response = new ApiResponse<>(
+                "All Categories retrieved successfully",
+                HttpStatus.OK.value(),
+                LocalDateTime.now(),
+                service.getProductCategories());
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/updateById/{categoryId}")
-    public ResponseEntity<Map<String, Object>> updateProductById(@PathVariable String categoryId, @RequestBody ProductCategory category) {
-        Map<String, Object> response = new HashMap<>();
-        if (service.updateProductCategoryById(categoryId, category)) {
-            response.put("categoryId", categoryId);
-            response.put("message", "category is updated successfully");
+    public ResponseEntity<ApiResponse<Void>> updateProductById(@PathVariable String categoryId, @RequestBody ProductCategory category) {
+        service.updateProductCategoryById(categoryId, category);
+        ApiResponse<Void> response = new ApiResponse<>(
+                "Category " + categoryId + " is updated successfully",
+                HttpStatus.OK.value(),
+                LocalDateTime.now(),
+                null);
             return new ResponseEntity<>(response, HttpStatus.OK);
-        }
-        response.put("categoryId", categoryId);
-        response.put("message", "category is not updated successfully");
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
     @PostMapping("/update/{categoryCode}")
-    public ResponseEntity<Map<String, Object>> updateProductByCode(@PathVariable String categoryCode, @RequestBody ProductCategory category) {
-        Map<String, Object> response = new HashMap<>();
-        if (service.updateProductCategoryByCode(categoryCode, category)) {
-            response.put("category code", categoryCode);
-            response.put("message", "category is updated successfully");
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        }
-        response.put("category code", categoryCode);
-        response.put("message", "category is not updated successfully");
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    public ResponseEntity<ApiResponse<Void>> updateProductByCode(@PathVariable String categoryCode, @RequestBody ProductCategory category) {
+        service.updateProductCategoryByCode(categoryCode, category);
+        ApiResponse<Void> response = new ApiResponse<>(
+                "Category " + categoryCode + " is updated successfully",
+                HttpStatus.OK.value(),
+                LocalDateTime.now(),
+                null);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
     }
 
     @PostMapping("/deleteById/{categoryId}")
-    public ResponseEntity<Map<String, Object>> deleteProductById(@PathVariable String categoryId) {
-        Map<String, Object> response = new HashMap<>();
+    public ResponseEntity<ApiResponse<Void>> deleteProductById(@PathVariable String categoryId) {
         service.deleteProductCategoryById(categoryId);
-        response.put("categoryId", categoryId);
-        response.put("message", "Product Category  deleted successfully");
+        ApiResponse<Void> response = new ApiResponse<>(
+                "Product Category " + categoryId + " deleted successfully ",
+                HttpStatus.OK.value(),
+                LocalDateTime.now(),
+                null);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/delete/{categoryCode}")
-    public ResponseEntity<Map<String, Object>> deleteProductByCode(@PathVariable String categoryCode) {
-        Map<String, Object> response = new HashMap<>();
+    public ResponseEntity<ApiResponse<Void>> deleteProductByCode(@PathVariable String categoryCode) {
         service.deleteProductCategoryByCode(categoryCode);
-        response.put("category code", categoryCode);
-        response.put("message", "Product Category  deleted successfully");
+        ApiResponse<Void> response = new ApiResponse<>(
+                "Product Category " + categoryCode + " deleted successfully ",
+                HttpStatus.OK.value(),
+                LocalDateTime.now(),
+                null);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

@@ -2,10 +2,7 @@ package com.inventory.product.Impl;
 
 import com.inventory.product.entities.Product;
 import com.inventory.product.entities.ProductCategory;
-import com.inventory.product.exceptions.CreationException;
-import com.inventory.product.exceptions.DeletionException;
-import com.inventory.product.exceptions.NotFoundException;
-import com.inventory.product.exceptions.UpdateException;
+import com.inventory.product.exceptions.*;
 import com.inventory.product.repositories.CategoryCountRepository;
 import com.inventory.product.repositories.ProductCategoryRepository;
 import com.inventory.product.repositories.ProductRepository;
@@ -69,17 +66,17 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
 
     @Override
     @Transactional
-    public boolean updateProductCategoryById(String id, ProductCategory productCategory) {
-        return updateProduct(getProductCategoryById(id), productCategory);
+    public void updateProductCategoryById(String id, ProductCategory productCategory) {
+        updateProduct(getProductCategoryById(id), productCategory);
     }
 
     @Override
     @Transactional
-    public boolean updateProductCategoryByCode(String code, ProductCategory productCategory) {
-        return updateProduct(getProductCategoryByCode(code), productCategory);
+    public void updateProductCategoryByCode(String code, ProductCategory productCategory) {
+        updateProduct(getProductCategoryByCode(code), productCategory);
     }
 
-    private boolean updateProduct(ProductCategory retrievedCategory, ProductCategory productCategory) {
+    private void updateProduct(ProductCategory retrievedCategory, ProductCategory productCategory) {
         if (retrievedCategory != null) {
             if (StringUtils.isBlank(productCategory.getProductCategoryId())) {
                 productCategory.setProductCategoryId(retrievedCategory.getProductCategoryId());
@@ -89,12 +86,12 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
             }
             try {
                 repository.save(productCategory);
-                return true;
+            } catch (NotFoundException ne) {
+                throw ne;
             } catch (Exception e) {
                 throw new UpdateException("Unable to update ProductCategory. " + e.getMessage());
             }
         }
-        return false;
     }
 
     @Override
@@ -110,7 +107,8 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
                         " it's linked with " + categoryUsedInProductTable.get());
             }
             repository.deleteById(id);
-
+        } catch (DeletionException | NotFoundException ex) {
+            throw ex;
         } catch (Exception e) {
             throw new DeletionException("Unable to delete product with id " + id + e.getMessage());
         }
@@ -133,12 +131,14 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
         try {
             var categoryUsedInProductTable = isCategoryUsedInProductTable(getProductCategoryByCode(categoryCode));
             if (categoryUsedInProductTable.isPresent()) {
-                throw new DeletionException("Unable to delete product with code -" + categoryCode + " because " +
+                throw new DeletionException("Unable to delete category with code -" + categoryCode + " because " +
                         "it's linked with " + categoryUsedInProductTable.get());
             }
             repository.deleteProductCategoryByProductCategoryCode(categoryCode);
+        } catch (DeletionException | NotFoundException ex) {
+            throw ex;
         } catch (Exception e) {
-            throw new DeletionException("Unable to delete product with category code " + categoryCode + e.getMessage());
+            throw new DeletionException("Unable to delete category with category code " + categoryCode + e.getMessage());
         }
     }
 
@@ -159,21 +159,29 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
 
     @Override
     public ProductCategory getProductCategoriesByProductCategoryName(String productCategoryName) {
-        return repository.getProductCategoriesByProductCategoryName(productCategoryName);
+        var productCategory = repository.getProductCategoriesByProductCategoryName(productCategoryName);
+        if (productCategory == null) {
+            throw new NotFoundException("Unable to find product with code -" + productCategory);
+        }
+        return productCategory;
     }
 
     @Override
     public ProductCategory getProductCategoryByCode(String code) {
-        var product = repository.getProductCategoriesByProductCategoryCode(code);
-        if (product == null) {
+        var productCategory = repository.getProductCategoriesByProductCategoryCode(code);
+        if (productCategory == null) {
             throw new NotFoundException("Unable to find product with code -" + code);
         }
-        return product;
+        return productCategory;
     }
 
     @Override
     public List<ProductCategory> getProductCategories() {
-        return repository.findAll();
+        try {
+            return repository.findAll();
+        } catch (Exception e) {
+            throw new RetrievalException("Unable to retrieve all product categories " + e.getMessage());
+        }
     }
 
     @Override
