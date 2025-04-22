@@ -44,10 +44,9 @@ The **Inventory Management System** is a microservices-based application designe
 - **Spring Data JPA**
 - **MySQL & PostgreSQL**
 - **Maven**
-- **Docker** (optional setup)
 - **Swagger / OpenAPI** for API documentation
-- **Eureka Server** (for service registry - if applicable)
-- **Spring Cloud Gateway** (optional)
+- **Eureka Server** 
+- **Spring Cloud Gateway** 
 
 ## 🚀 Getting Started
 
@@ -57,11 +56,12 @@ The **Inventory Management System** is a microservices-based application designe
 - MySQL & PostgreSQL running locally or in Docker
 - IntelliJ or any IDE
 
+##📬 Postman Collection
+A ready-to-use Postman collection for testing all microservice endpoints is available in the (https://github.com/guninder-sandhu/Inventory-Management-System/tree/dev/postman) folder.
+
 ### Clone the repo
 
 ```bash
 git clone https://github.com/your-username/Inventory-Management-System.git
 cd Inventory-Management-System
 
-📬 Postman Collection
-A ready-to-use Postman collection for testing all microservice endpoints is available in the /postman folder.
