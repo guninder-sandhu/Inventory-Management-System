@@ -11,7 +11,8 @@ The **Inventory Management System** is a microservices-based application designe
 
 ### 2. `product-service`
 - Manages product inventory, including creation, updates, and deletion.
-- Uses **PostgreSQL** as its database.
+- Uses PostgreSQL as its database.
+- Communicates with stock-service to retrieve current stock levels for products.
 - RESTful APIs to handle product-related data.
 
 ### 3. `stock-service`
@@ -34,6 +35,7 @@ The **Inventory Management System** is a microservices-based application designe
 - No dedicated database is typically required as Eureka Server manages its state in memory.
 - Provides a web-based dashboard (usually accessible at `http://localhost:8761` by default) for monitoring registered
   services.
+  **Note: The Eureka Server should be the first service started before running other services.**
 
 ## 🛠 Tech Stack
 
@@ -60,3 +62,6 @@ The **Inventory Management System** is a microservices-based application designe
 ```bash
 git clone https://github.com/your-username/Inventory-Management-System.git
 cd Inventory-Management-System
+
+📬 Postman Collection
+A ready-to-use Postman collection for testing all microservice endpoints is available in the /postman folder.
