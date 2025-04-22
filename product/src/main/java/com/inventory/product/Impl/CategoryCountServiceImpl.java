@@ -8,6 +8,7 @@ import com.inventory.product.repositories.CategoryCountRepository;
 import com.inventory.product.services.CategoryCountService;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -28,7 +29,7 @@ public class CategoryCountServiceImpl implements CategoryCountService {
                 var freshCount = new CategoryCount(1, 0);
                 repository.save(freshCount);
             } catch (Exception e) {
-                throw new CreationException("Unable to create Category Count");
+                throw new CreationException("Unable to create Category Count" + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
     }

@@ -9,6 +9,7 @@ import com.inventory.product.repositories.ProductRepository;
 import com.inventory.product.services.ProductCategoryService;
 import jakarta.transaction.Transactional;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,7 +34,7 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     @Transactional
     public ProductCategory createProductCategory(ProductCategory productCategory) {
         if (checkProductAlreadyExists(productCategory)) {
-            throw new CreationException("Product Category already exists");
+            throw new CreationException("Product Category already exists", HttpStatus.CONFLICT);
         }
         try {
             var uniqueUUID = UUID.randomUUID().toString();
@@ -44,7 +45,7 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
             updateProductCount(++categoryCount);
             return repository.save(productCategory);
         } catch (Exception e) {
-            throw new CreationException("Unable to create ProductCategory. " + e.getMessage());
+            throw new CreationException("Unable to create ProductCategory. " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -161,7 +162,7 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     public ProductCategory getProductCategoriesByProductCategoryName(String productCategoryName) {
         var productCategory = repository.getProductCategoriesByProductCategoryName(productCategoryName);
         if (productCategory == null) {
-            throw new NotFoundException("Unable to find product with code -" + productCategory);
+            throw new NotFoundException("Category " + productCategoryName + " Doesnt Exist");
         }
         return productCategory;
     }
@@ -170,7 +171,7 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     public ProductCategory getProductCategoryByCode(String code) {
         var productCategory = repository.getProductCategoriesByProductCategoryCode(code);
         if (productCategory == null) {
-            throw new NotFoundException("Unable to find product with code -" + code);
+            throw new NotFoundException("Unable to find category with code -" + code);
         }
         return productCategory;
     }

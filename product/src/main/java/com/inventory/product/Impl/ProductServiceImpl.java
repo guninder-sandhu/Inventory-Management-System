@@ -2,31 +2,102 @@ package com.inventory.product.Impl;
 
 
 import com.inventory.product.dto.ProductDto;
+import com.inventory.product.dto.StockDto;
 import com.inventory.product.entities.Product;
 import com.inventory.product.entities.ProductCategory;
 import com.inventory.product.exceptions.*;
+import com.inventory.product.externalapicalls.client.StockClient;
 import com.inventory.product.repositories.ProductCountRepository;
 import com.inventory.product.repositories.ProductRepository;
 import com.inventory.product.services.ProductCategoryService;
 import com.inventory.product.services.ProductService;
+import com.inventory.product.util.StockResult;
+import com.inventory.product.util.StockStatus;
+import feign.FeignException;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
 @Service
+@Slf4j
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository repository;
     private final ProductCountRepository productCountRepository;
     private final ProductCategoryService productCategoryService;
+    private final StockClient stockClient;
 
-    public ProductServiceImpl(ProductRepository repository, ProductCountRepository productCountRepository, ProductCategoryService productCategoryService) {
+    public ProductServiceImpl(ProductRepository repository, ProductCountRepository productCountRepository, ProductCategoryService productCategoryService, StockClient stockClient) {
         this.repository = repository;
         this.productCountRepository = productCountRepository;
         this.productCategoryService = productCategoryService;
+        this.stockClient = stockClient;
+    }
+
+    @Override
+    @Transactional
+    public Product createProductFromDto(ProductDto productDto) {
+        if (productDto.getStockQuantity() < 0) {
+            throw new CreationException("Unable to create product. Stock quantity should be either 0 or greater than 0", HttpStatus.BAD_REQUEST);
+        }
+        var productCategoryName = productDto.getProductCategoryName();
+        if (StringUtils.isBlank(productCategoryName)) {
+            var productWithoutCategory = createProduct(retrieveProduct(productDto));
+            var stockResult = createStockForProduct(productWithoutCategory.getProductCode(), productDto.getStockQuantity());
+            productWithoutCategory.setStatus(stockResult.getStatus().name());
+            productWithoutCategory.setQuantity(stockResult.getQuantity());
+            return productWithoutCategory;
+        }
+        try {
+            var productCategory = productCategoryService.getProductCategoriesByProductCategoryName(productCategoryName);
+            if (productCategory == null) {
+                throw new CreationException("Unable to create product as Category " + productCategoryName + " does not exist", HttpStatus.BAD_REQUEST);
+            }
+            Product product = retrieveProduct(productDto);
+            product.setProductCategory(productCategory);
+            var createdProduct = createProduct(product);
+            var stockResult = createStockForProduct(createdProduct.getProductCode(), productDto.getStockQuantity());
+            createdProduct.setStatus(stockResult.getStatus().name());
+            createdProduct.setQuantity(stockResult.getQuantity());
+            return createdProduct;
+        } catch (NotFoundException e) {
+            throw new CreationException("Unable to create product as Category " + productCategoryName + " does not exist", HttpStatus.BAD_REQUEST);
+        } catch (CreationException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new CreationException("Unable to create product " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    private StockResult createStockForProduct(String productCode, int quantity) {
+        try {
+            StockDto stockDto = new StockDto(productCode, quantity);
+            stockClient.createStock(stockDto);
+            log.info("Created stock for product with code {}", productCode);
+            return quantity > 0 ? new StockResult(quantity, StockStatus.AVAILABLE) : new StockResult(quantity, StockStatus.OUT_OF_STOCK);
+        } catch (FeignException.Conflict e) {
+            log.warn("Stock already exists for product code: {}. Use update or modify instead.", productCode);
+        } catch (FeignException.NotFound e) {
+            log.warn("Stock service not found for product code: {}", productCode);
+        } catch (FeignException e) {
+            log.error("Feign error while creating stock for product code: {}", productCode, e);
+        } catch (Exception e) {
+            log.error("Unexpected error while creating stock for product code: {}", productCode, e);
+        }
+        return new StockResult(0, StockStatus.ERROR);
+    }
+
+    private Product retrieveProduct(ProductDto productDto) {
+        Product product = new Product();
+        product.setProductName(productDto.getProductName());
+        product.setProductDescription(productDto.getProductDescription());
+        product.setProductPrice(productDto.getProductPrice());
+        return product;
     }
 
     @Override
@@ -41,7 +112,8 @@ public class ProductServiceImpl implements ProductService {
             updateProductCount(++productCount);
             return repository.save(product);
         } catch (Exception e) {
-            throw new CreationException("Unable to create product");
+            log.error("Error creating product {}", e.getMessage());
+            throw new CreationException("Unable to create product" + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -53,14 +125,70 @@ public class ProductServiceImpl implements ProductService {
         return String.format("PROD%05d", ++productCount);
     }
 
-
     public void updateProductCount(int productCount) {
         productCountRepository.updateProductCount(productCount);
     }
 
     @Override
+    public Product getProductByCode(String code) {
+        var product = repository.getProductByProductCode(code);
+        if (product == null) {
+            throw new NotFoundException("Unable to find product with code " + code);
+        }
+        var stockStatus = getStockFromProductCode(product.getProductCode());
+        product.setQuantity(stockStatus.getQuantity());
+        product.setStatus(stockStatus.getStatus().name());
+        return product;
+    }
+
+    @Override
     public Product getProductById(String id) {
-        return repository.findById(id).orElseThrow(() -> new NotFoundException("Unable to find product with id -" + id));
+        var product = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Unable to find product with id -" + id));
+        var stockStatus = getStockFromProductCode(product.getProductCode());
+        product.setQuantity(stockStatus.getQuantity());
+        product.setStatus(stockStatus.getStatus().name());
+        return product;
+    }
+
+
+    private StockResult getStockFromProductCode(String productCode) {
+        log.info("Getting quantity from stock for product code: {}", productCode);
+        try {
+            var response = stockClient.getProductQuantityFromCode(productCode);
+            if (response == null || response.getData() == null) {
+                log.warn("No stock information found for product code: {}. Returning default value 0", productCode);
+                return new StockResult(0, StockStatus.NOT_FOUND);
+            }
+            var quantity = response.getData().getQuantity();
+            return quantity > 0 ? new StockResult(quantity, StockStatus.AVAILABLE) : new StockResult(quantity, StockStatus.OUT_OF_STOCK);
+        } catch (FeignException.NotFound e) {
+            log.warn("Stock not found for product code: {}. Returning default value 0", productCode, e);
+            return new StockResult(0, StockStatus.ERROR);
+        } catch (Exception e) {
+            log.error("Error retrieving stock for product code: {}", productCode, e);
+            return new StockResult(0, StockStatus.ERROR);
+        }
+    }
+
+
+    @Override
+    public List<Product> getProductFromName(String name) {
+        return repository.getProductsByProductName(name);
+    }
+
+    @Override
+    public List<Product> getAllProducts() {
+        try {
+            return repository.findAll();
+        } catch (Exception e) {
+            throw new RetrievalException("Unable to retrieve all products " + e.getMessage());
+        }
+    }
+
+    @Override
+    public List<Product> getProductsByCategory(ProductCategory category) {
+        return repository.getProductsByProductCategory(category);
     }
 
     @Override
@@ -144,53 +272,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    @Transactional
-    public Product createProductFromDto(ProductDto productDto) {
-        var productCategoryName = productDto.getProductCategoryName();
-        if (StringUtils.isBlank(productCategoryName)) {
-            return createProduct(retrieveProduct(productDto));
-        }
-        try {
-            var productCategory = productCategoryService.getProductCategoriesByProductCategoryName(productCategoryName);
-            if(productCategory==null){
-                throw new CreationException("Unable to create product as Category " + productCategoryName + " does not exist");
-            }
-            Product product = retrieveProduct(productDto);
-            product.setProductCategory(productCategory);
-            return createProduct(product);
-        } catch (Exception e) {
-            throw new CreationException("Unable to create product "+ e.getMessage());
-        }
-    }
-
-    private Product retrieveProduct(ProductDto productDto) {
-        Product product = new Product();
-        product.setProductName(productDto.getProductName());
-        product.setProductDescription(productDto.getProductDescription());
-        product.setProductPrice(productDto.getProductPrice());
-        return product;
-    }
-
-    @Override
-    public List<Product> getProductFromName(String name) {
-        return repository.getProductsByProductName(name);
-    }
-
-    @Override
-    public List<Product> getAllProducts() {
-        try {
-            return repository.findAll();
-        } catch (Exception e) {
-            throw new RetrievalException("Unable to retrieve all products " + e.getMessage());
-        }
-    }
-
-    @Override
-    public List<Product> getProductsByCategory(ProductCategory category) {
-        return repository.getProductsByProductCategory(category);
-    }
-
-    @Override
     public boolean updateProductAddCategory(String id, ProductCategory category) {
         if (!checkProductExists(id)) {
             throw new NotFoundException("Unable to find product with id -" + id);
@@ -203,14 +284,5 @@ public class ProductServiceImpl implements ProductService {
         } catch (Exception e) {
             throw new UpdateException("Error in adding product category to product " + id + " " + e.getMessage());
         }
-    }
-
-    @Override
-    public Product getProductByCode(String code) {
-        var product = repository.getProductByProductCode(code);
-        if (product == null) {
-            throw new NotFoundException("Unable to find product with code " + code);
-        }
-        return product;
     }
 }

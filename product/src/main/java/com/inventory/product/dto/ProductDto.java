@@ -32,4 +32,6 @@ public class ProductDto {
             nullable = true
     )
     private String productCategoryName;
+
+    private int stockQuantity;
 }
