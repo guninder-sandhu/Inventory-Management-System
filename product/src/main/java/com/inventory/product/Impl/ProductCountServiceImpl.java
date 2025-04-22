@@ -8,6 +8,7 @@ import com.inventory.product.repositories.ProductCountRepository;
 import com.inventory.product.services.ProductCountService;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -30,7 +31,7 @@ public class ProductCountServiceImpl implements ProductCountService {
                 ProductCount freshCount = new ProductCount(1, 0);
                 repository.save(freshCount);
             } catch (Exception e) {
-                throw new CreationException("Unable to create ProductCount");
+                throw new CreationException("Unable to create ProductCount" + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
     }

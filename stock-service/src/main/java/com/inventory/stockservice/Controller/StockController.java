@@ -86,6 +86,8 @@ public class StockController {
                     LocalDateTime.now(),
                     service.createStock(stock));
             return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } catch (CreationException e) {
+            throw e;
         } catch (Exception e) {
             throw new CreationException("Unable to create stock " + e.getMessage());
         }

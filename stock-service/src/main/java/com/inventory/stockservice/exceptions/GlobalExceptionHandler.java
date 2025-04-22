@@ -49,11 +49,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<Void>> handleCreationException(CreationException ex) {
         ApiResponse<Void> response = new ApiResponse<>(
                 ex.getMessage(),
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                HttpStatus.CONFLICT.value(),
                 LocalDateTime.now(),
                 null // No data
         );
-        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
@@ -93,11 +93,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<Void>> handleRetrievalException(RetrievalException ex) {
         ApiResponse<Void> response = new ApiResponse<>(
                 ex.getMessage(),
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                HttpStatus.NOT_FOUND.value(),
                 LocalDateTime.now(),
                 null // No data
         );
-        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(InsufficientStockException.class)

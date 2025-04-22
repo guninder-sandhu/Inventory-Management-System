@@ -5,12 +5,14 @@ import com.inventory.stockservice.exceptions.*;
 import com.inventory.stockservice.repository.StockRepository;
 import com.inventory.stockservice.service.StockService;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
 @Service
+@Slf4j
 public class StockServiceImpl implements StockService {
 
     private final StockRepository repository;
@@ -23,7 +25,9 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public Stock findByProductCode(String productCode) {
-        return repository.getStockByProductCode(productCode);
+        var stock = repository.getStockByProductCode(productCode);
+        log.info("stock retrieved {}", stock.getQuantity());
+        return stock;
     }
 
     @Override

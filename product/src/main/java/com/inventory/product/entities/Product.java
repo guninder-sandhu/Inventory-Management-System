@@ -50,4 +50,10 @@ public class Product {
     public String getProductCategoryName() {
         return productCategory != null ? productCategory.getProductCategoryName() : null;
     }
+
+    @Transient
+    private int quantity;
+
+    @Transient
+    private String status;
 }

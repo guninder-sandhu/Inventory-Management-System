@@ -39,11 +39,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<Void>> handleCreationException(CreationException ex) {
         ApiResponse<Void> response = new ApiResponse<>(
                 ex.getMessage(),
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                ex.getStatus().value(),
                 LocalDateTime.now(),
                 null // No data
         );
-        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(response, ex.getStatus());
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
