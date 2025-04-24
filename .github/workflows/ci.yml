@@ -13,47 +13,84 @@ on:
     branches: [ "dev", "master" ]
 
 jobs:
-  build:
+  detect-changes:
     runs-on: ubuntu-latest
+    outputs:
+      services: ${{ steps.set-services.outputs.services }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2  # Fetch enough history for parent commits
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}  # Ensure correct SHA for PRs
+
+      - name: Determine changed services
+        id: set-services
+        shell: bash
+        run: |
+          echo "Checking changed services..."
+          services=('user-service' 'product' 'stock-service' 'service-registry' 'apigateway-service')
+          changed_services=()
+
+          # For pull requests, compare against base branch; for push, use before SHA or parent
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            git fetch origin ${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}
+            BASE="origin/${{ github.base_ref }}"
+            HEAD="${{ github.sha }}"
+          else
+            BASE="${{ github.event.before }}"
+            HEAD="${{ github.sha }}"
+            if [ -z "$BASE" ] || [ "$BASE" == "0000000000000000000000000000000000000000" ]; then
+              BASE=$(git rev-parse ${{ github.sha }}^ 2>/dev/null || echo "")
+            fi
+          fi
+
+          # Check each service for changes
+          for service in "${services[@]}"; do
+            if [ -n "$BASE" ]; then
+              git diff --name-only "$BASE" "$HEAD" | grep "^$service/" > changed_files.txt || true
+            else
+              git show --pretty="" --name-only "$HEAD" | grep "^$service/" > changed_files.txt || true
+            fi
+            if [ -s changed_files.txt ]; then
+              changed_services+=("$service")
+            fi
+          done
+
+          # Output changed services as JSON for matrix
+          if [ ${#changed_services[@]} -eq 0 ]; then
+            echo "No services changed."
+            echo "services=[]" >> "$GITHUB_OUTPUT"
+          else
+            echo "Changed services: ${changed_services[*]}"
+            echo "services=$(jq -nc '$ARGS.positional' --args "${changed_services[@]}")" >> "$GITHUB_OUTPUT"
+          fi
+
+  build:
+    needs: detect-changes
+    runs-on: ubuntu-latest
+    if: ${{ needs.detect-changes.outputs.services != '[]' }}
     strategy:
       matrix:
-        service: ['user-service', 'product', 'stock-service', 'service-registry', 'apigateway-service']
+        service: ${{ fromJson(needs.detect-changes.outputs.services) }}
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Check if service has a change
-        id: changes
-        shell: bash
-        run: |
-          echo "Checking changes for: ${{ matrix.service }}"
-          BEFORE_SHA="${{ github.event.before }}"
-          if [ -z "$BEFORE_SHA" ]; then
-            echo "No 'before' SHA detected — trying to find parent commit..."
-            PARENT=$(git rev-parse ${{ github.sha }}^ 2>/dev/null || echo "")
-            if [ -n "$PARENT" ]; then
-              git diff --name-only $PARENT ${{ github.sha }} | grep "^${{ matrix.service }}/" > changed_files.txt || true
-            else
-              git show --pretty="" --name-only ${{ github.sha }} | grep "^${{ matrix.service }}/" > changed_files.txt || true
-            fi
-          else
-            git diff --name-only "$BEFORE_SHA" "${{ github.sha }}" | grep "^${{ matrix.service }}/" > changed_files.txt || true
-          fi
-
-          if [ -s changed_files.txt ]; then
-            echo "changed=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-          fi
+        with:
+          fetch-depth: 2
 
       - name: Set up JDK 17
-        if: steps.changes.outputs.changed == 'true'
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
 
+      - name: Check for pom.xml
+        run: |
+          if [ ! -f "${{ matrix.service }}/pom.xml" ]; then
+            echo "No pom.xml found in ${{ matrix.service }}. Skipping build."
+            exit 1
+          fi
+
       - name: Build with Maven
-        if: steps.changes.outputs.changed == 'true'
         run: mvn -B package --file ${{ matrix.service }}/pom.xml
