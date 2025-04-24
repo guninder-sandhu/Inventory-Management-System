@@ -8,22 +8,22 @@ on:
   push:
     branches: [ "dev" ]
     paths:
-      - 'inven-management/apigateway-service/**'
-      - 'inven-management/product/**'
-      - 'inven-management/service-registry/**'
-      - 'inven-management/stock-service/**'
-      - 'inven-management/user-service/**'
-      - 'inven-management/pom.xml'  # Include root pom.xml for changes affecting all modules
+      - 'Inventory-Management-System/apigateway-service/**'
+      - 'Inventory-Management-System/product/**'
+      - 'Inventory-Management-System/service-registry/**'
+      - 'Inventory-Management-System/stock-service/**'
+      - 'Inventory-Management-System/user-service/**'
+      - 'Inventory-Management-System/pom.xml'  # Include root pom.xml for changes affecting all modules
       - '.github/workflows/**'
   pull_request:
     branches: [ "dev" ]
     paths:
-      - 'inven-management/apigateway-service/**'
-      - 'inven-management/product/**'
-      - 'inven-management/service-registry/**'
-      - 'inven-management/stock-service/**'
-      - 'inven-management/user-service/**'
-      - 'inven-management/pom.xml'
+      - 'Inventory-Management-System/apigateway-service/**'
+      - 'Inventory-Management-System/product/**'
+      - 'Inventory-Management-System/service-registry/**'
+      - 'Inventory-Management-System/stock-service/**'
+      - 'Inventory-Management-System/user-service/**'
+      - 'Inventory-Management-System/pom.xml'  # Include root pom.xml for changes affecting all modules
       - '.github/workflows/**'
 
 jobs:
