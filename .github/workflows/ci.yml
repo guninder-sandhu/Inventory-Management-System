@@ -26,6 +26,7 @@ on:
       - 'stock-service/**'
       - 'product/**'
       - 'user-service/**'
+  workflow_dispatch:
 
 jobs:
   build:
