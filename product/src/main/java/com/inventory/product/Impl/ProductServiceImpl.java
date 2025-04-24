@@ -51,6 +51,7 @@ public class ProductServiceImpl implements ProductService {
             var stockResult = createStockForProduct(productWithoutCategory.getProductCode(), productDto.getStockQuantity());
             productWithoutCategory.setStatus(stockResult.getStatus().name());
             productWithoutCategory.setQuantity(stockResult.getQuantity());
+            log.info("Product {} Successfully created without category", productWithoutCategory.getProductCode());
             return productWithoutCategory;
         }
         try {
