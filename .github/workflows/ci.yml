@@ -1,0 +1,57 @@
+# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Java CI with Maven
+
+on:
+  push:
+    branches: [ "dev","master" ]
+    paths:
+      -'apigateway-service/**'
+      -'service-registry/**'
+      -'stock-service/**'
+      -'product/**'
+      -'user-service/**'
+       
+  pull_request:
+    branches: [ "dev","master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+       matrix:
+        services:['user-service','product','stock-service','service-registry','apigateway-service']
+
+    steps:
+    - uses: actions/checkout@v4
+    - name : Check if service has a change
+      id: changes
+      run: |
+        echo: "Checking changes for: ${{matrix.service}}"
+         if git diff --name-only ${{ github.sha }} ${{ github.event.before }} | grep "^${{ matrix.service }}/"; then
+           echo: "changed=true" >> $GITHUB_OUTPUT
+         else
+           echo: "changed=false" >> $GITHUB_OUTPUT
+    - name: Set up JDK 17
+      if: steps.changes.output.changed = 'true'
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+    - name: Build with Maven ${{matrix.service}}
+      if: steps.changes.output.changed == 'true'
+      run: mvn -B package --file ${{ matrix.service }}/pom.xml
+      
+
+    # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
+    - name: Update dependency graph
+      uses: advanced-security/maven-dependency-submission-action@571e99aab1055c2e71a1e2309b9691de18d6b7d6
