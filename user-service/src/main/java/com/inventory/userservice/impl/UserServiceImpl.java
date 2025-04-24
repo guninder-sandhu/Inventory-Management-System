@@ -6,11 +6,13 @@ import com.inventory.userservice.repositories.UserRepository;
 import com.inventory.userservice.services.UserCountService;
 import com.inventory.userservice.services.UserServices;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 public class UserServiceImpl implements UserServices {
 
@@ -33,6 +35,7 @@ public class UserServiceImpl implements UserServices {
                 var userCode = generateUserCode(userCount);
                 user.setUserCode(userCode);
                 updateUserCount(userCount);
+                log.info("User created successfully -{}", userCode);
                 return userRepository.save(user);
             } catch (Exception e) {
                 throw new CreationException("Unable to create user");

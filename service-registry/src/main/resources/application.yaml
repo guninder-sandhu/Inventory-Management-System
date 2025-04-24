@@ -8,6 +8,3 @@ eureka:
     register-with-eureka: false
     fetch-registry: false
 
-spring:
-  application:
-    name: SERVICE-REGISTRY

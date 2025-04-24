@@ -145,6 +145,7 @@ public class StockServiceImpl implements StockService {
                     if (updatedRecords == 0) {
                         throw new ConflictException("Stock was modified by another transaction. Please try again.");
                     }
+                    log.info("Stock Updated successfully");
                 }
                 case STOCK_ID -> {
                     var stock = findById(value);
