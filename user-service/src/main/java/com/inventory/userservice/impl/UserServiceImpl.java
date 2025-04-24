@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserServices {
                 var userCode = generateUserCode(userCount);
                 user.setUserCode(userCode);
                 updateUserCount(userCount);
-                log.info("User created successfully -{}", userCode);
+                log.info("User created successfully - {}", userCode);
                 return userRepository.save(user);
             } catch (Exception e) {
                 throw new CreationException("Unable to create user");
