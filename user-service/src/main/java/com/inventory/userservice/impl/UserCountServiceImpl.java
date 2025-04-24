@@ -6,10 +6,12 @@ import com.inventory.userservice.exceptions.RetrievalException;
 import com.inventory.userservice.repositories.UserCountRepository;
 import com.inventory.userservice.services.UserCountService;
 import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class UserCountServiceImpl implements UserCountService {
 
@@ -22,6 +24,7 @@ public class UserCountServiceImpl implements UserCountService {
             try {
                 UserCount freshCount = new UserCount(1,0);
                 repository.save(freshCount);
+                log.info("User Count Initialized");
             } catch (Exception e) {
                 throw new CreationException("Unable to create User Count");
             }

@@ -15,7 +15,7 @@ spring:
         - id: PRODUCT-SERVICE
           uri: lb://PRODUCT-SERVICE
           predicates:
-            - Path=/product-category/**,/product/**
+            - Path=/product/**,/product-category/**
 
 server:
   port: 8085

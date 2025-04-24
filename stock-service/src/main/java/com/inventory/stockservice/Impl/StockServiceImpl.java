@@ -112,12 +112,14 @@ public class StockServiceImpl implements StockService {
                         throw new NotFoundException("Unable to find product  " + value);
                     }
                     repository.deleteByProductCode(value);
+                    log.info("Stock Record with code: {} deleted ", value);
                 }
                 case STOCK_ID -> {
                     if (!repository.existsById(value)) {
                         throw new NotFoundException("Unable to find product with id " + value);
                     }
                     repository.deleteById(value);
+                    log.info("Stock Record with id: {} deleted ", value);
                 }
                 default ->
                         throw new WrongParameterException("Invalid by value: " + by + ".Use 'productcode' or 'stockid'.");
