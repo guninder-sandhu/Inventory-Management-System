@@ -8,6 +8,7 @@ import com.inventory.product.repositories.ProductCategoryRepository;
 import com.inventory.product.repositories.ProductRepository;
 import com.inventory.product.services.ProductCategoryService;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class ProductCategoryServiceImpl implements ProductCategoryService {
 
     private final ProductCategoryRepository repository;
@@ -164,6 +166,7 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
         if (productCategory == null) {
             throw new NotFoundException("Category " + productCategoryName + " Doesnt Exist");
         }
+        log.info("Product Category retrieved");
         return productCategory;
     }
 
