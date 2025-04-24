@@ -28,39 +28,47 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service: ['user-service','product','stock-service','service-registry','apigateway-service']
+        service: [ 'user-service','product','stock-service','service-registry','apigateway-service' ]
     steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 2
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
 
-    - name: Check if service has a change
-      id: changes
-      run: |
-        echo "Checking changes for: ${{matrix.service}}"
-        if git diff-tree -r --no-commit-id --name-only ${{ github.sha }} | grep "^${{ matrix.service }}/"; then
-           echo "changed=true" >> $GITHUB_OUTPUT
-        else
-           echo "changed=false" >> $GITHUB_OUTPUT
-        fi
+      - name: Check if service has a change
+        id: changes
+        run: |
+          echo "Checking changes for: ${{matrix.service}}"
+          BEFORE_SHA="${{ github.event.before }}"
+          if [ -z "$BEFORE_SHA" ]; then
+            echo "Using initial commit range"
+            git diff --name-only ${{ github.sha }} | grep "^${{ matrix.service }}/" > changed_files.txt
+          else
+            git diff --name-only $BEFORE_SHA ${{ github.sha }} | grep "^${{ matrix.service }}/" > changed_files.txt
+          fi
+          
+          if [ -s changed_files.txt ]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
 
-    - name: Set up JDK 17
-      if: steps.changes.outputs.changed == 'true'
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: maven
-        cache-dependency-path: ${{ matrix.service }}/pom.xml
+      - name: Set up JDK 17
+        if: steps.changes.outputs.changed == 'true'
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+          cache-dependency-path: ${{ matrix.service }}/pom.xml
 
-    - name: Build and test with Maven
-      if: steps.changes.outputs.changed == 'true'
-      run: |
-        mvn -B verify --file ${{ matrix.service }}/pom.xml
+      - name: Build and test with Maven
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          mvn -B verify --file ${{ matrix.service }}/pom.xml
 
-    - name: Update dependency graph
-      if: steps.changes.outputs.changed == 'true'
-      uses: advanced-security/maven-dependency-submission-action@v3
-      with:
-        directory: ${{ matrix.service }}
-      continue-on-error: true
+      - name: Update dependency graph
+        if: steps.changes.outputs.changed == 'true'
+        uses: advanced-security/maven-dependency-submission-action@v3
+        with:
+          directory: ${{ matrix.service }}
+        continue-on-error: true
