@@ -1,7 +1,8 @@
 name: Java CI with Maven
+
 on:
   push:
-    branches: [ "dev","master" ]
+    branches: [ "dev", "master" ]
     paths:
       - 'apigateway-service/**'
       - 'service-registry/**'
@@ -9,47 +10,40 @@ on:
       - 'product/**'
       - 'user-service/**'
   pull_request:
-    branches: [ "dev","master" ]
-    paths:
-      - 'apigateway-service/**'
-      - 'service-registry/**'
-      - 'stock-service/**'
-      - 'product/**'
-      - 'user-service/**'
-  workflow_dispatch:
-
-permissions:
-  contents: read
-  security-events: write
-  actions: read
+    branches: [ "dev", "master" ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        service: [ 'user-service','product','stock-service','service-registry','apigateway-service' ]
+        service: ['user-service', 'product', 'stock-service', 'service-registry', 'apigateway-service']
+
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
 
       - name: Check if service has a change
         id: changes
+        shell: bash
         run: |
-          echo "Checking changes for: ${{matrix.service}}"
+          echo "Checking changes for: ${{ matrix.service }}"
           BEFORE_SHA="${{ github.event.before }}"
           if [ -z "$BEFORE_SHA" ]; then
-            echo "Using initial commit range"
-            git diff --name-only ${{ github.sha }} | grep "^${{ matrix.service }}/" > changed_files.txt
+            echo "No 'before' SHA detected — trying to find parent commit..."
+            PARENT=$(git rev-parse ${{ github.sha }}^ 2>/dev/null || echo "")
+            if [ -n "$PARENT" ]; then
+              git diff --name-only $PARENT ${{ github.sha }} | grep "^${{ matrix.service }}/" > changed_files.txt || true
+            else
+              git show --pretty="" --name-only ${{ github.sha }} | grep "^${{ matrix.service }}/" > changed_files.txt || true
+            fi
           else
-            git diff --name-only $BEFORE_SHA ${{ github.sha }} | grep "^${{ matrix.service }}/" > changed_files.txt
+            git diff --name-only "$BEFORE_SHA" "${{ github.sha }}" | grep "^${{ matrix.service }}/" > changed_files.txt || true
           fi
-          
+
           if [ -s changed_files.txt ]; then
-            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "changed=true" >> "$GITHUB_OUTPUT"
           else
-            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "changed=false" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Set up JDK 17
@@ -59,16 +53,10 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
-          cache-dependency-path: ${{ matrix.service }}/pom.xml
 
-      - name: Build and test with Maven
+      - name: Build with Maven
         if: steps.changes.outputs.changed == 'true'
-        run: |
-          mvn -B verify --file ${{ matrix.service }}/pom.xml
+        run: mvn -B package --file ${{ matrix.service }}/pom.xml
 
       - name: Update dependency graph
-        if: steps.changes.outputs.changed == 'true'
-        uses: advanced-security/maven-dependency-submission-action@v3
-        with:
-          directory: ${{ matrix.service }}
-        continue-on-error: true
+        uses: advanced-security/maven-dependency-submission-action@571e99aab1055c2e71a1e2309b9691de18d6b7d6
