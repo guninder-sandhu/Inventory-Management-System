@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: CONFIG-SERVER
+
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/guninder-sandhu/config-server
+          username: guninder-sandhu
+          password: ${GITHUB_TOKEN}
+          clone-on-start: true
+
+server:
+  port: 8084
