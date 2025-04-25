@@ -1,3 +1,4 @@
+
 spring:
   application:
     name: API-GATEWAY
@@ -16,17 +17,8 @@ spring:
           uri: lb://PRODUCT-SERVICE
           predicates:
             - Path=/product-category/**,/product/**
+  config:
+    import: optional:configserver:http://localhost:8084/
 
 server:
   port: 8085
-
-eureka:
-  instance:
-    prefer-ip-address: true
-  client:
-    fetch-registry: true
-    register-with-eureka: true
-    service-url:
-      defaultZone: http://localhost:8761/eureka
-
-
