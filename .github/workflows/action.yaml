@@ -11,6 +11,21 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: testdb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-timeout=5s
+          --health-start-period=10s
+          --health-interval=5s
+
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK 17
@@ -19,6 +34,11 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
+
+      - name: Start PostgreSQL database
+        run: |
+          docker run --name postgres -d -e POSTGRES_PASSWORD=password -e POSTGRES_USER=postgres -e POSTGRES_DB=testdb -p 5432:5432 postgres
+
       - name: Build with Maven
         run: mvn -B package --file pom.xml
 
@@ -39,4 +59,7 @@ jobs:
 
       - name: Build user-service
         run: mvn -B package --file user-service/pom.xml
+
+      - name: Clean up PostgreSQL container
+        run: docker stop postgres && docker rm postgres
 
