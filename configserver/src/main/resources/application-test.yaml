@@ -9,7 +9,7 @@ spring:
           uri: https://github.com/guninder-sandhu/config-server
           username: guninder-sandhu
           password: ${GITHUB_TOKEN}
-          clone-on-start: true
+          clone-on-start: false
 
 server:
   port: 8084
