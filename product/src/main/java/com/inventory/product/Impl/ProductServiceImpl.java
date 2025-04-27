@@ -110,6 +110,7 @@ public class ProductServiceImpl implements ProductService {
             var code = generateProductCode(productCount);
             product.setProductCode(code);
             updateProductCount(++productCount);
+            log.info("Product {} created successfully", code);
             return repository.save(product);
         } catch (Exception e) {
             log.error("Error creating product {}", e.getMessage());
