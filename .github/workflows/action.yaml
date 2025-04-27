@@ -35,6 +35,7 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
+
       - name: Start PostgreSQL database
         run: |
           docker run --name postgres -d -e POSTGRES_PASSWORD=password -e POSTGRES_USER=postgres -e POSTGRES_DB=testdb -p 5432:5432 postgres
