@@ -139,6 +139,7 @@ public class ProductServiceImpl implements ProductService {
         var stockStatus = getStockFromProductCode(product.getProductCode());
         product.setQuantity(stockStatus.getQuantity());
         product.setStatus(stockStatus.getStatus().name());
+        log.info("Product {} retrieved successfully", code);
         return product;
     }
 
