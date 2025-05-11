@@ -19,6 +19,34 @@ spring:
             - Path=/product-category/**,/product/**
   config:
     import: optional:configserver:http://localhost:8084/
+  security:
+    oauth2:
+      client:
+        registration:
+          ims-client:
+            client-id: RGBhQ6wHQjRxbvc69KFHDEJ1UKxDxWTW
+            client-secret: Pg96wWFA17FCpP1CGGDS-u5JGzmO7kYQxSjdakAKMiPY86af9YgE7Ju6FeCmcnWL
+            provider: auth0
+            authorization-grant-type: authorization_code
+            scope: openid,profile,email,offline_access
+
+        provider:
+          auth0:
+            issuer-uri: https://dev-tifsgpj0de6wps8x.au.auth0.com/
+      resourceserver:
+        jwt:
+          issuer-uri: https://dev-tifsgpj0de6wps8x.au.auth0.com/
+          jwk-set-uri: https://dev-tifsgpj0de6wps8x.au.auth0.com/.well-known/jwks.json
+          audiences: https://ims-api
 
 server:
   port: 8085
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+
+app:
+  oauth2:
+    login-success-url: http://localhost:8085/auth/login
+
