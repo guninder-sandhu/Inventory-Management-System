@@ -36,6 +36,11 @@ The **Inventory Management System** is a microservices-based application designe
 - Provides a web-based dashboard (usually accessible at `http://localhost:8761` by default) for monitoring registered
   services.
   **Note: The Eureka Server should be the first service started before running other services.**
+### 5. `api-gateway`
+
+- Acts as a **Gateway**, providing a single entry point for all microservices within the Inventory
+  Management System.
+- Has **Auth0** Integrated for handling access token
 
 ## 🛠 Tech Stack
 
@@ -46,7 +51,9 @@ The **Inventory Management System** is a microservices-based application designe
 - **Maven**
 - **Swagger / OpenAPI** for API documentation
 - **Eureka Server** 
-- **Spring Cloud Gateway** 
+- **Spring Cloud Gateway**
+- **AUTH0**
+  
 
 ## 🚀 Getting Started
 
@@ -59,9 +66,14 @@ The **Inventory Management System** is a microservices-based application designe
 ##📬 Postman Collection
 A ready-to-use Postman collection for testing all microservice endpoints is available in the (https://github.com/guninder-sandhu/Inventory-Management-System/tree/dev/postman) folder.
 
+### Frontend
+Frontend of this is based on React and Tailwind and is available at https://github.com/guninder-sandhu/Frontend-Inventory-Management-System
+
 ### Clone the repo
 
 ```bash
 git clone https://github.com/your-username/Inventory-Management-System.git
 cd Inventory-Management-System
+
+
 
