@@ -23,6 +23,9 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtAuthenticationConverterAdapter;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.reactive.CorsConfigurationSource;
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -43,9 +46,10 @@ public class SecurityConfig {
 
         return httpSecurity
                 .authorizeExchange(exchange -> {
-                    exchange.pathMatchers("/login", "/oauth2/**").permitAll();
+                    exchange.pathMatchers("/login", "/oauth2/**", "/auth/callback").permitAll();
                     exchange.anyExchange().authenticated();
                 })
+                .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .oauth2Login(oauth2Login -> {
                     oauth2Login.authorizationRequestResolver(resolver);
                 })
@@ -55,6 +59,19 @@ public class SecurityConfig {
                         jwtSpec.jwtAuthenticationConverter(grantedAuthoritiesExtractor());
                     });
                 }).build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.addAllowedOrigin("http://localhost:5173/");
+        config.addAllowedMethod("*");
+        config.addAllowedHeader("*");
+        config.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 
     // Define a ReactiveOAuth2UserService for OIDC

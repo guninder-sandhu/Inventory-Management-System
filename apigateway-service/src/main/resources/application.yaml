@@ -38,6 +38,8 @@ spring:
           issuer-uri: https://dev-tifsgpj0de6wps8x.au.auth0.com/
           jwk-set-uri: https://dev-tifsgpj0de6wps8x.au.auth0.com/.well-known/jwks.json
           audiences: https://ims-api
+frontend:
+  redirect-uri: http://localhost:5173/auth-callback
 
 server:
   port: 8085
