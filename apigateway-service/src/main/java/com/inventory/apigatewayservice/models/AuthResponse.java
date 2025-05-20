@@ -18,6 +18,6 @@ public class AuthResponse {
     private long expireAt;
     private Collection<String> authorities;
 
-    private List<String> roles;       // Add this
-    private List<String> permissions; // Add this
+    private List<String> roles;
+    private List<String> permissions;
 }
