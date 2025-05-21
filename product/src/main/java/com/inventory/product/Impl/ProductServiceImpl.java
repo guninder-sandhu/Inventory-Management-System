@@ -118,7 +118,7 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
-    private int getProductCount() {
+    public int getProductCount() {
         return productCountRepository.getProductCount();
     }
 
