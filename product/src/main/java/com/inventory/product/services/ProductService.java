@@ -37,4 +37,6 @@ public interface ProductService {
     boolean checkProductExistsByCode(String code);
 
     Product createProductFromDto(ProductDto productDto);
+
+    int getProductCount();
 }

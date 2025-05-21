@@ -63,6 +63,16 @@ public class ProductController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/count")
+    public ResponseEntity<ApiResponse<Integer>> getTotalProductCount() {
+        ApiResponse<Integer> response = new ApiResponse<>(
+                "Product Count retrieved successfully",
+                HttpStatus.OK.value(),
+                LocalDateTime.now(),
+                service.getProductCount());
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @GetMapping("/code/{productCode}")
     public ResponseEntity<ApiResponse<Product>> getProductByCode(@PathVariable String productCode) {
         ApiResponse<Product> response = new ApiResponse<>(
