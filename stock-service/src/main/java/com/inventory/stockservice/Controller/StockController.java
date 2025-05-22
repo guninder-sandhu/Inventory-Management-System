@@ -56,6 +56,21 @@ public class StockController {
         }
     }
 
+    @GetMapping("/total")
+    public ResponseEntity<ApiResponse<Integer>> getTotalStocks() {
+        try {
+            var stockQuantity = service.getAllStockQuantity();
+            ApiResponse<Integer> response = new ApiResponse<>(
+                    "Stocks Quantity retrieved successfully",
+                    HttpStatus.OK.value(),
+                    LocalDateTime.now(),
+                    stockQuantity);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            throw new RetrievalException("Unable to retrieve stocks at this time");
+        }
+    }
+
     /**
      * Retrieves stock details based on the provided product code.
      *
@@ -98,7 +113,7 @@ public class StockController {
             summary = "Filter stock by quantity",
             description = "Returns stock based on comparison type (above, below, equal) and quantity value"
     )
-    public ResponseEntity<List<Stock>> filterStockByQuantity(
+    public ResponseEntity<ApiResponse<List<Stock>>> filterStockByQuantity(
             @Parameter(
                     description = "Type of comparison: above, below, equal",
                     example = "above"
@@ -109,7 +124,12 @@ public class StockController {
                     example = "100"
             )
             @RequestParam int quantity) {
-        return ResponseEntity.ok(service.filterStockByQuantity(type, quantity));
+        ApiResponse<List<Stock>> response = new ApiResponse<>(
+                "Stock created successfully",
+                HttpStatus.CREATED.value(),
+                LocalDateTime.now(),
+                service.filterStockByQuantity(type, quantity));
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/update-quantity")
@@ -190,6 +210,20 @@ public class StockController {
         response.put("message", "Stock deleted successfully.");
         response.put("status", HttpStatus.OK.value());
         response.put("timestamp", LocalDateTime.now());
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/listStocks")
+    public ResponseEntity<ApiResponse<List<Stock>>> getStockByProductCodeList(
+            @RequestParam List<String> productCodes) {
+
+        List<Stock> stocks = service.findAllByProductCodeIn(productCodes);
+
+        ApiResponse<List<Stock>> response = new ApiResponse<>(
+                "Stocks retrieved successfully",
+                HttpStatus.OK.value(),
+                LocalDateTime.now(),
+                stocks);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

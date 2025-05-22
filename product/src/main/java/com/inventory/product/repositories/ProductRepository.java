@@ -24,4 +24,6 @@ public interface ProductRepository extends JpaRepository<Product, String> {
     void updateProductCategory(@Param("category") ProductCategory category, @Param("id") String id);
 
     boolean existsByProductCode(String productCode);
+
+    List<Product> findByProductCodeIn(List<String> productCodes);
 }

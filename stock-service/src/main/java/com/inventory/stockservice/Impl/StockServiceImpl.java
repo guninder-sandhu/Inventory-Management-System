@@ -51,6 +51,11 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
+    public Integer getAllStockQuantity() {
+        return repository.getTotalStockQuantity();
+    }
+
+    @Override
     public List<Stock> filterStockByQuantity(String type, int quantity) {
         try {
             return switch (type.toLowerCase()) {
@@ -167,6 +172,11 @@ public class StockServiceImpl implements StockService {
     @Override
     public boolean checkProductCodeExists(String productCode) {
         return repository.existsByProductCode(productCode);
+    }
+
+    @Override
+    public List<Stock> findAllByProductCodeIn(List<String> productCodes) {
+        return repository.findAllByProductCodeIn(productCodes);
     }
 
     private int getNewQuantity(Stock stock, int quantity) {

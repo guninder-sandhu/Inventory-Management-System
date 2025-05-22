@@ -19,6 +19,9 @@ public interface StockRepository extends JpaRepository<Stock, String> {
     @Query("select s from Stock s where s.quantity= :quantity")
     List<Stock> getProductStockEqualToQuantity(@Param("quantity") int quantity);
 
+    @Query("SELECT SUM(s.quantity) FROM Stock s")
+    Integer getTotalStockQuantity();
+
     Stock getStockByProductCode(String productCode);
 
     Stock getStocksByStockId(String stockId);
@@ -34,4 +37,6 @@ public interface StockRepository extends JpaRepository<Stock, String> {
     int updateStockQuantityByStockId(@Param("stockId") String stockId, @Param("version") int version, @Param("quantity") int quantity);
 
     void deleteByProductCode(String value);
+
+    List<Stock> findAllByProductCodeIn(List<String> productCode);
 }

@@ -39,4 +39,9 @@ public interface ProductService {
     Product createProductFromDto(ProductDto productDto);
 
     int getProductCount();
+
+    Double getTotalProductInventoryCost();
+
+    List<Product> getProductsLowInStock(int lowStockCriteria);
+    Integer getNumberOfProductsInLowStock(int lowStockCriteria);
 }

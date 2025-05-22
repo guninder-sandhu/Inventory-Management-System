@@ -1,0 +1,9 @@
+server:
+  port: 8087
+
+spring:
+  application:
+    name: DASHBOARD-SERVICE
+
+  config:
+    import: optional:configserver:http://localhost:8084/
