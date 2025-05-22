@@ -63,6 +63,36 @@ public class ProductController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/totalValue")
+    public ResponseEntity<ApiResponse<Double>> getTotalInventoryValue() {
+        ApiResponse<Double> response = new ApiResponse<>(
+                "Total Inventory retrieved successfully",
+                HttpStatus.OK.value(),
+                LocalDateTime.now(),
+                service.getTotalProductInventoryCost());
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/lowStockProducts")
+    public ResponseEntity<ApiResponse<List<Product>>> getLowStockProducts(@RequestParam(defaultValue = "10") int lowStockThreshold) {
+        ApiResponse<List<Product>> response = new ApiResponse<>(
+                "Low Stock Products retrieved successfully",
+                HttpStatus.OK.value(),
+                LocalDateTime.now(),
+                service.getProductsLowInStock(lowStockThreshold));
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/lowStockCount")
+    public ResponseEntity<ApiResponse<Integer>> getLowStockProductsCount(@RequestParam(defaultValue = "10")  int lowStockThreshold) {
+        ApiResponse<Integer> response = new ApiResponse<>(
+                "Low Stock Products retrieved successfully",
+                HttpStatus.OK.value(),
+                LocalDateTime.now(),
+                service.getNumberOfProductsInLowStock(lowStockThreshold));
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @GetMapping("/count")
     public ResponseEntity<ApiResponse<Integer>> getTotalProductCount() {
         ApiResponse<Integer> response = new ApiResponse<>(

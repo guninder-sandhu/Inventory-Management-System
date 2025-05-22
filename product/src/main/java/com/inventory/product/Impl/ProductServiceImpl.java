@@ -9,6 +9,7 @@ import com.inventory.product.exceptions.*;
 import com.inventory.product.externalapicalls.client.StockClient;
 import com.inventory.product.repositories.ProductCountRepository;
 import com.inventory.product.repositories.ProductRepository;
+import com.inventory.product.response.ApiResponse;
 import com.inventory.product.services.ProductCategoryService;
 import com.inventory.product.services.ProductService;
 import com.inventory.product.util.StockResult;
@@ -17,11 +18,15 @@ import feign.FeignException;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.boot.actuate.logging.LoggersEndpoint;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Slf4j
@@ -31,12 +36,14 @@ public class ProductServiceImpl implements ProductService {
     private final ProductCountRepository productCountRepository;
     private final ProductCategoryService productCategoryService;
     private final StockClient stockClient;
+    private final LoggersEndpoint loggersEndpoint;
 
-    public ProductServiceImpl(ProductRepository repository, ProductCountRepository productCountRepository, ProductCategoryService productCategoryService, StockClient stockClient) {
+    public ProductServiceImpl(ProductRepository repository, ProductCountRepository productCountRepository, ProductCategoryService productCategoryService, StockClient stockClient, LoggersEndpoint loggersEndpoint) {
         this.repository = repository;
         this.productCountRepository = productCountRepository;
         this.productCategoryService = productCategoryService;
         this.stockClient = stockClient;
+        this.loggersEndpoint = loggersEndpoint;
     }
 
     @Override
@@ -120,6 +127,77 @@ public class ProductServiceImpl implements ProductService {
 
     public int getProductCount() {
         return productCountRepository.getProductCount();
+    }
+
+//    @Override
+//    public Double getTotalProductInventoryCost() {
+//        List<Product> allProducts = repository.findAll();
+//        try{
+//            return allProducts.stream().mapToDouble(
+//                    product ->
+//                            product.getQuantity() * product.getProductPrice()).sum();
+//        }catch (Exception e){
+//            throw new RetrievalException("Unable to Retrieve Inventory");
+//        }
+//
+//    }
+
+    @Override
+    public Double getTotalProductInventoryCost() {
+        List<Product> allProducts = repository.findAll();
+        List<String> allProductCode = allProducts.stream().map(Product::getProductCode).distinct().toList();
+        ApiResponse<List<StockDto>> stockByProductCodeList = stockClient.getStockByProductCodeList(allProductCode);
+
+        if(stockByProductCodeList==null || stockByProductCodeList.getData()==null) {
+            log.error("Unable to get stocks and hence Inventory ");
+            return null;
+        }
+        List<StockDto> stockData = stockByProductCodeList.getData();
+        Map<String, Integer> stockMap = stockData.stream()
+                .collect(Collectors.toMap(StockDto::getProductCode, StockDto::getQuantity));
+
+        for (Product product : allProducts) {
+            Integer quantity = stockMap.getOrDefault(product.getProductCode(), 0);
+            product.setQuantity(quantity);
+            log.info("Product: {}, Quantity: {} Price: {}",product.getProductCode(),product.getQuantity(), product.getProductPrice());
+        }
+        try {
+            return allProducts.stream()
+                    .mapToDouble(product -> product.getQuantity() * product.getProductPrice())
+                    .sum();
+        } catch (Exception e) {
+            throw new RetrievalException("Unable to Retrieve Inventory");
+        }
+    }
+
+    @Override
+    public List<Product> getProductsLowInStock(int lowStockCriteria) {
+
+        int threshold = (lowStockCriteria>0)?lowStockCriteria:10;
+        ApiResponse<List<StockDto>> below = stockClient.getFilteredStocks("below", threshold);
+        if(below==null || below.getData()==null){
+            log.error("Unable to retrieve Products with low stock");
+            return null;
+        }
+        return retrieveProductsFromStockDto(below.getData());
+    }
+
+    private List<Product> retrieveProductsFromStockDto(List<StockDto> stockDtoList) {
+        List<String> lowStockProductCodes = stockDtoList.stream().map(
+                        StockDto::getProductCode)
+                .toList();
+        return repository.findByProductCodeIn(lowStockProductCodes);
+    }
+
+    @Override
+    public Integer getNumberOfProductsInLowStock(int lowStockCriteria) {
+        int threshold = (lowStockCriteria>0)?lowStockCriteria:10;
+        ApiResponse<List<StockDto>> below = stockClient.getFilteredStocks("below", threshold);
+        if(below==null || below.getData()==null){
+            log.error("Unable to retrieve low stock");
+            return -1;
+        }
+        return below.getData().size();
     }
 
     public String generateProductCode(int productCount) {

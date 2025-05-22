@@ -17,6 +17,10 @@ spring:
           uri: lb://PRODUCT-SERVICE
           predicates:
             - Path=/product-category/**,/product/**
+        - id: DASHBOARD-SERVICE
+          uri: lb://DASHBOARD-SERVICE
+          predicates:
+            - Path=/dashboard/**
   config:
     import: optional:configserver:http://localhost:8084/
   security:

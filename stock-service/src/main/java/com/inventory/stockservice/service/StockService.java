@@ -15,6 +15,8 @@ public interface StockService {
 
     List<Stock> findAll();
 
+    Integer getAllStockQuantity();
+
     List<Stock> filterStockByQuantity(String type, int quantity);
 
     void updateStockQuantity(String by, String value, int quantity, int version);
@@ -24,4 +26,7 @@ public interface StockService {
     void modifyStockQuantity(String by, String value, int quantity, int version);
 
     boolean checkProductCodeExists(String productCode);
+
+    List<Stock> findAllByProductCodeIn(List<String> productCodes);
+
 }

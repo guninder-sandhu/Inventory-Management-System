@@ -26,17 +26,6 @@ import java.util.Map;
 public class AuthController {
 
 
-//    @Value("${'spring.cloud.security.oauth2.client.registration.ims-client.client-id'}")
-//    private String clientId;
-//    @Value("${security.oauth2.client.registration.ims-client.client-secret}")
-//    private String clientSecret;
-//    @Value("${security.oauth2.client.registration.ims-client.redirect-uri}")
-//    private String redirectUri;
-//    @Value("${frontend.redirect-uri}")
-//    private String frontendRedirect;
-//    @Value("${security.oauth2.client.provider.auth0.issuer-uri}")
-//    private String issuerUri;
-
     private Logger logger = LoggerFactory.getLogger(AuthController.class.getName());
 
     @GetMapping("/login")
