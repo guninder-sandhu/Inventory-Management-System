@@ -6,4 +6,4 @@ spring:
     name: DASHBOARD-SERVICE
 
   config:
-    import: optional:configserver:http://localhost:8084/
+    import: optional:configserver:http://configserver:8084/

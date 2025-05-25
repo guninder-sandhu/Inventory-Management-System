@@ -4,7 +4,7 @@ spring:
   application:
     name: STOCK-SERVICE
   datasource:
-    url: jdbc:mysql://localhost:3306/stockservice
+    url: jdbc:mysql://mysqldb:3306/stockservice
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -13,4 +13,4 @@ spring:
       ddl-auto: update
     show-sql: true
   config:
-    import: optional:configserver:http://localhost:8084/
+    import: optional:configserver:http://configserver:8084/

@@ -9,7 +9,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/productmicroservice
+    url: jdbc:postgresql://postgres:5432/productmicroservice
     username: postgres
     password: root
     driver-class-name: org.postgresql.Driver
@@ -25,5 +25,5 @@ spring:
     name: PRODUCT-SERVICE
 
   config:
-    import: optional:configserver:http://localhost:8084/
+    import: optional:configserver:http://configserver:8084/
 

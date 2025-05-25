@@ -22,7 +22,7 @@ spring:
           predicates:
             - Path=/dashboard/**
   config:
-    import: optional:configserver:http://localhost:8084/
+    import: optional:configserver:http://configserver:8084/
   security:
     oauth2:
       client:
