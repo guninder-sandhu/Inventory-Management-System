@@ -1,16 +1,19 @@
 services:
   mysqldb:
-    image: mysql:8
+    build:
+      context: ./mysql-init
     ports:
       - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: usermicroservice
+    volumes:
+      - mysql_data:/var/lib/mysql
     healthcheck:
       test: [ "CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -proot --silent" ]
       interval: 10s
       timeout: 5s
       retries: 10
+
 
   phpmyadmin:
     image: phpmyadmin:5.2.2
@@ -27,6 +30,7 @@ services:
       - "5432:5432"
     environment:
       POSTGRES_PASSWORD: root
+      POSTGRES_DB: productmicroservice
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 10s
@@ -51,61 +55,71 @@ services:
     image: service-registry:1.0.0
     ports:
       - "8761:8761"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8761/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
-#  stockservice:
-#    build:
-#      context: stock-service/
-#    image: stock-service:1.0.0
-#    ports:
-#      - "8083:8083"
-#    depends_on:
-#      mysqldb:
-#        condition: service_healthy
-#      serviceregistry:
-#        condition: service_started
-#      configserver:
-#        condition: service_started
+  stockservice:
+    build:
+      context: stock-service/
+    image: stock-service:1.0.0
+    ports:
+      - "8083:8083"
+    depends_on:
+      mysqldb:
+        condition: service_healthy
+      serviceregistry:
+        condition: service_healthy
+      configserver:
+        condition: service_healthy
 
-#  userservice:
-#    build:
-#      context: user-service/
-#    image: user-service:1.0.0
-#    ports:
-#      - "8081:8081"
-#    depends_on:
-#      mysqldb:
-#        condition: service_healthy
-#      serviceregistry:
-#        condition: service_started
-#      configserver:
-#        condition: service_started
-#
-#
-#  configserver:
-#    build:
-#      context: configserver/
-#    image: configserver:1.0.0
-#    ports:
-#      - "8084:8084"
-#    environment:
-#
-#    depends_on:
-#      serviceregistry:
-#        condition: service_started
-#
-#  product:
-#    build:
-#      context: product/
-#    image: product-service:1.0.0
-#    ports:
-#      - "8082:8082"
-#    depends_on:
-#      postgres:
-#        condition: service_healthy
-#      serviceregistry:
-#        condition: service_started
-#      configserver:
-#        condition: service_started
+  userservice:
+    build:
+      context: user-service/
+    image: user-service:1.0.0
+    ports:
+      - "8081:8081"
+    depends_on:
+      mysqldb:
+        condition: service_healthy
+      serviceregistry:
+        condition: service_started
+      configserver:
+        condition: service_started
+
+
+  configserver:
+    build:
+      context: configserver/
+    image: configserver:1.0.0
+    ports:
+      - "8084:8084"
+    environment:
+      GITHUB_TOKEN: ${GITHUB_TOKEN}
+    depends_on:
+      serviceregistry:
+        condition: service_started
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8084/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  product:
+    build:
+      context: product/
+    image: product-service:1.0.0
+    ports:
+      - "8082:8082"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      serviceregistry:
+        condition: service_started
+      configserver:
+        condition: service_started
 
 #  dashboard-service:
 #    build:
@@ -115,9 +129,9 @@ services:
 #      - "8087:8087"
 #    depends_on:
 #      serviceregistry:
-#        condition: service_started
+#        condition: service_healthy
 #      configserver:
-#        condition: service_started
+#        condition: service_healthy
 #
 #  apigateway-service:
 #    build:
@@ -127,6 +141,9 @@ services:
 #      - "8085:8085"
 #    depends_on:
 #      serviceregistry:
-#        condition: service_started
+#        condition: service_healthy
 #      configserver:
-#        condition: service_started
+#        condition: service_healthy
+
+volumes:
+   mysql_data:

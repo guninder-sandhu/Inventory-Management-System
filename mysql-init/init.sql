@@ -1,0 +1,2 @@
+CREATE DATABASE IF NOT EXISTS usermicroservice;
+CREATE DATABASE IF NOT EXISTS stockservice;

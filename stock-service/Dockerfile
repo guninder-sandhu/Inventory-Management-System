@@ -18,5 +18,7 @@ COPY --from=builder /build/target/stock-service-0.0.1-SNAPSHOT.jar app.jar
 ADD https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh /wait-for-it.sh
 RUN chmod +x /wait-for-it.sh
 
-# Use wait-for-it.sh as ENTRYPOINT and pass the java command as arguments
-ENTRYPOINT ["/wait-for-it.sh", "mysqldb:3306", "--timeout=60", "--", "java", "-jar", "/app/app.jar"]
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
