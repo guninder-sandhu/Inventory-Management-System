@@ -121,29 +121,29 @@ services:
       configserver:
         condition: service_started
 
-#  dashboard-service:
-#    build:
-#      context: dashboard-service/
-#    image: dashboard-service:1.0.0
-#    ports:
-#      - "8087:8087"
-#    depends_on:
-#      serviceregistry:
-#        condition: service_healthy
-#      configserver:
-#        condition: service_healthy
-#
-#  apigateway-service:
-#    build:
-#      context: apigateway-service/
-#    image: apigateway-service:1.0.0
-#    ports:
-#      - "8085:8085"
-#    depends_on:
-#      serviceregistry:
-#        condition: service_healthy
-#      configserver:
-#        condition: service_healthy
+  dashboard-service:
+    build:
+      context: dashboard-service/
+    image: dashboard-service:1.0.0
+    ports:
+      - "8087:8087"
+    depends_on:
+      serviceregistry:
+        condition: service_healthy
+      configserver:
+        condition: service_healthy
+
+  apigateway-service:
+    build:
+      context: apigateway-service/
+    image: apigateway-service:1.0.0
+    ports:
+      - "8085:8085"
+    depends_on:
+      serviceregistry:
+        condition: service_healthy
+      configserver:
+        condition: service_healthy
 
 volumes:
    mysql_data:
