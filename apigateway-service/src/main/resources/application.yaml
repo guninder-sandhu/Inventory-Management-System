@@ -21,8 +21,9 @@ spring:
           uri: lb://DASHBOARD-SERVICE
           predicates:
             - Path=/dashboard/**
-  config:
-    import: optional:configserver:http://localhost:8084/
+
+    config:
+      enabled: false
   security:
     oauth2:
       client:
@@ -53,4 +54,13 @@ logging:
 app:
   oauth2:
     login-success-url: http://localhost:8085/auth/login
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
 

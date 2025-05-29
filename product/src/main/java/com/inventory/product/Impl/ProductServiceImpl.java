@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @Slf4j
@@ -111,6 +110,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public Product createProduct(Product product) {
         try {
+            log.info("Creating Product ..");
             var uniqueUUID = UUID.randomUUID().toString();
             product.setProductId(uniqueUUID);
             var productCount = getProductCount();
