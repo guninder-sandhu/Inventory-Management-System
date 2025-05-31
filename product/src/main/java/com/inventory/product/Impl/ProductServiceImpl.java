@@ -18,7 +18,6 @@ import feign.FeignException;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.boot.actuate.logging.LoggersEndpoint;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -35,14 +34,12 @@ public class ProductServiceImpl implements ProductService {
     private final ProductCountRepository productCountRepository;
     private final ProductCategoryService productCategoryService;
     private final StockClient stockClient;
-    private final LoggersEndpoint loggersEndpoint;
 
-    public ProductServiceImpl(ProductRepository repository, ProductCountRepository productCountRepository, ProductCategoryService productCategoryService, StockClient stockClient, LoggersEndpoint loggersEndpoint) {
+    public ProductServiceImpl(ProductRepository repository, ProductCountRepository productCountRepository, ProductCategoryService productCategoryService, StockClient stockClient) {
         this.repository = repository;
         this.productCountRepository = productCountRepository;
         this.productCategoryService = productCategoryService;
         this.stockClient = stockClient;
-        this.loggersEndpoint = loggersEndpoint;
     }
 
     @Override
@@ -217,6 +214,7 @@ public class ProductServiceImpl implements ProductService {
         var stockStatus = getStockFromProductCode(product.getProductCode());
         product.setQuantity(stockStatus.getQuantity());
         product.setStatus(stockStatus.getStatus().name());
+        log.info("Product retrieved {}", product);
         return product;
     }
 

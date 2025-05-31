@@ -1,11 +1,12 @@
 package com.inventory.orderservice.services;
 
+import com.inventory.orderservice.dto.PurchaseOrderItemDto;
 import com.inventory.orderservice.entities.PurchaseOrderItems;
 
 import java.util.List;
 
 public interface PurchaseOrderItemService {
-    boolean createPurchaseOrderItem(PurchaseOrderItems purchaseOrderItems);
+    PurchaseOrderItems createPurchaseOrderItem(PurchaseOrderItemDto purchaseOrderItems);
 
     boolean updatePurchaseOrderItem(PurchaseOrderItems purchaseOrderItems);
 
