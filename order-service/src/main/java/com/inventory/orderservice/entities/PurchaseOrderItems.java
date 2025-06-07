@@ -24,6 +24,7 @@ public class PurchaseOrderItems {
 
     private String productId;
     private String productName;
+    private String productCode;
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
     private PurchaseOrder purchaseOrder;
