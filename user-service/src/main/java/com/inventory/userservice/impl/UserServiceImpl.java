@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserServices {
     }
 
     public String generateUserCode(int userCount) {
-        return String.format("EMP%05d", ++userCount);
+        return String.format("EMP-%05d", ++userCount);
     }
 
     @Transactional
