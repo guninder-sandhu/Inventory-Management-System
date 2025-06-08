@@ -198,7 +198,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public String generateProductCode(int productCount) {
-        return String.format("PROD%05d", ++productCount);
+        return String.format("PROD-%05d", ++productCount);
     }
 
     public void updateProductCount(int productCount) {

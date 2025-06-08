@@ -58,7 +58,7 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     }
 
     public String generateCategoryCode(int categoryCount) {
-        return String.format("CATG%05d", ++categoryCount);
+        return String.format("CATG-%05d", ++categoryCount);
     }
 
     public void updateProductCount(int productCount) {
