@@ -1,5 +1,6 @@
 package com.inventory.orderservice.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.inventory.orderservice.constants.OrderStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -8,7 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -19,7 +20,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@EnableJpaAuditing
+@EntityListeners(AuditingEntityListener.class)
 public class PurchaseOrder {
 
     @Id
@@ -38,6 +39,7 @@ public class PurchaseOrder {
 
     @ManyToOne
     @JoinColumn(name = "vendor_id", nullable = false)
+    @JsonManagedReference
     private Vendor vendor;
 
     @Column(name = "order_cost", nullable = false)
@@ -47,6 +49,7 @@ public class PurchaseOrder {
     private String createBy;
 
     @OneToMany(mappedBy = "purchaseOrder", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<PurchaseOrderItems> purchaseOrderItems;
 
     @CreatedDate

@@ -1,22 +1,24 @@
 package com.inventory.orderservice.services;
 
+import com.inventory.orderservice.dto.PurchaseOrderItemDto;
+import com.inventory.orderservice.entities.PurchaseOrder;
 import com.inventory.orderservice.entities.PurchaseOrderItems;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface PurchaseOrderItemService {
-    boolean createPurchaseOrderItem(PurchaseOrderItems purchaseOrderItems);
+    PurchaseOrderItems createPurchaseOrderItem(PurchaseOrderItemDto purchaseOrderItems, PurchaseOrder purchaseOrder);
 
-    boolean updatePurchaseOrderItem(PurchaseOrderItems purchaseOrderItems);
+    PurchaseOrderItems updatePurchaseOrderItem(String poid, PurchaseOrderItemDto purchaseOrderItems);
 
-    boolean deletePurchaseOrderItem(PurchaseOrderItems purchaseOrderItems);
-
-    boolean deletePurchaseOrderItemById(String id);
-
-    boolean deletePurchaseOrderItemByProductId(String productId);
+    void deletePurchaseOrderItemById(String id);
 
     List<PurchaseOrderItems> findPurchaseOrderItemsByPurchaseOrder(String purchaseOrderId);
 
-    List<PurchaseOrderItems> findPurchaseOrderItemsById(String id);
+    PurchaseOrderItems findPurchaseOrderItemById(String id);
 
+    List<PurchaseOrderItems> findAllItems();
+
+    List<PurchaseOrderItems> findAllItemsCreatedOn(LocalDate createdOn);
 }

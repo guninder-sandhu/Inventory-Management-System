@@ -68,7 +68,6 @@ public class StockServiceImpl implements StockService {
         } catch (Exception e) {
             throw new RetrievalException("Unable to retrieve quantity details for filter " + type);
         }
-
     }
 
     @Override
