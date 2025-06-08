@@ -2,6 +2,7 @@ package com.inventory.orderservice.Impl;
 
 import com.inventory.orderservice.dto.ProductRetrievedDto;
 import com.inventory.orderservice.dto.PurchaseOrderItemDto;
+import com.inventory.orderservice.entities.PurchaseOrder;
 import com.inventory.orderservice.entities.PurchaseOrderItems;
 import com.inventory.orderservice.exceptions.*;
 import com.inventory.orderservice.externalapiclient.clients.ProductClient;
@@ -29,7 +30,7 @@ public class PurchaseOrderItemServiceImpl implements PurchaseOrderItemService {
 
     @Transactional
     @Override
-    public PurchaseOrderItems createPurchaseOrderItem(PurchaseOrderItemDto items) {
+    public PurchaseOrderItems createPurchaseOrderItem(PurchaseOrderItemDto items, PurchaseOrder purchaseOrder) {
         try {
             ProductRetrievedDto productRetrievedDto = getProductDetails(items.getProductCode());
             PurchaseOrderItems purchaseOrderItems = new PurchaseOrderItems();
@@ -37,8 +38,8 @@ public class PurchaseOrderItemServiceImpl implements PurchaseOrderItemService {
             purchaseOrderItems.setPoid(orderItemId);
             purchaseOrderItems.setQuantityOrdered(items.getQuantityOrdered());
             populatePurchaseOrderItems(productRetrievedDto, purchaseOrderItems);
-            repo.save(purchaseOrderItems);
-            return purchaseOrderItems;
+            purchaseOrderItems.setPurchaseOrder(purchaseOrder);
+            return repo.save(purchaseOrderItems);
         } catch (NotFoundException e) {
             throw e;
         } catch (Exception e) {
@@ -46,12 +47,11 @@ public class PurchaseOrderItemServiceImpl implements PurchaseOrderItemService {
         }
     }
 
-    private PurchaseOrderItems populatePurchaseOrderItems(ProductRetrievedDto productRetrievedDto, PurchaseOrderItems purchaseOrderItems) {
+    private void populatePurchaseOrderItems(ProductRetrievedDto productRetrievedDto, PurchaseOrderItems purchaseOrderItems) {
         purchaseOrderItems.setProductId(productRetrievedDto.getProductId());
         purchaseOrderItems.setProductName(productRetrievedDto.getProductName());
         purchaseOrderItems.setProductCode(productRetrievedDto.getProductCode());
         purchaseOrderItems.setUnitPrice(productRetrievedDto.getProductPrice());
-        return purchaseOrderItems;
     }
 
     private ProductRetrievedDto getProductDetails(String productCode) {

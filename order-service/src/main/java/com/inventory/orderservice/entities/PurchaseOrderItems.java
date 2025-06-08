@@ -1,5 +1,6 @@
 package com.inventory.orderservice.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,6 +28,7 @@ public class PurchaseOrderItems {
     private String productCode;
     @ManyToOne
     @JoinColumn(name = "order_id", nullable = false)
+    @JsonIgnore
     private PurchaseOrder purchaseOrder;
 
     @CreatedDate
@@ -40,6 +42,6 @@ public class PurchaseOrderItems {
     @Column(name = "quantity_ordered", nullable = false)
     private int quantityOrdered;
 
-    @Column(name = "unit price", nullable = false)
+    @Column(name = "unit_price", nullable = false)
     private double unitPrice;
 }

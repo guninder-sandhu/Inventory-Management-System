@@ -1,5 +1,6 @@
 package com.inventory.orderservice.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -46,5 +47,6 @@ public class Vendor {
     private String address;
 
     @OneToMany(mappedBy = "vendor")
+    @JsonBackReference
     private List<PurchaseOrder> orders;
 }

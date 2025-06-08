@@ -30,7 +30,7 @@ public class VendorServiceImpl implements VendorService {
 
 
     private String generateVendorCode(Integer vendorCount) {
-        return String.format("VEND%05d", vendorCount);
+        return String.format("VEND-%05d", vendorCount);
     }
 
     @Transactional

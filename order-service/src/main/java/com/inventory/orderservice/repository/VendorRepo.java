@@ -36,4 +36,7 @@ public interface VendorRepo extends JpaRepository<Vendor, String> {
     String getVendorIdByVendorCode(String vendorCode);
 
 
+    boolean existsVendorByVendorCode(String vendorCode);
+
+
 }

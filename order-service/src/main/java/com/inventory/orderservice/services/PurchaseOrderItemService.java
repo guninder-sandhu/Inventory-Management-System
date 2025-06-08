@@ -1,13 +1,14 @@
 package com.inventory.orderservice.services;
 
 import com.inventory.orderservice.dto.PurchaseOrderItemDto;
+import com.inventory.orderservice.entities.PurchaseOrder;
 import com.inventory.orderservice.entities.PurchaseOrderItems;
 
 import java.time.LocalDate;
 import java.util.List;
 
 public interface PurchaseOrderItemService {
-    PurchaseOrderItems createPurchaseOrderItem(PurchaseOrderItemDto purchaseOrderItems);
+    PurchaseOrderItems createPurchaseOrderItem(PurchaseOrderItemDto purchaseOrderItems, PurchaseOrder purchaseOrder);
 
     PurchaseOrderItems updatePurchaseOrderItem(String poid, PurchaseOrderItemDto purchaseOrderItems);
 
@@ -20,5 +21,4 @@ public interface PurchaseOrderItemService {
     List<PurchaseOrderItems> findAllItems();
 
     List<PurchaseOrderItems> findAllItemsCreatedOn(LocalDate createdOn);
-
 }

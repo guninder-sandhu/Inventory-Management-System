@@ -4,6 +4,7 @@ import com.inventory.orderservice.dto.PurchaseOrderItemDto;
 import com.inventory.orderservice.entities.PurchaseOrderItems;
 import com.inventory.orderservice.response.ApiResponse;
 import com.inventory.orderservice.services.PurchaseOrderItemService;
+import com.inventory.orderservice.services.PurchaseOrderService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,19 +19,22 @@ import java.util.List;
 public class PurchaseOrderItemController {
 
     private final PurchaseOrderItemService service;
+    private final PurchaseOrderService purchaseOrderService;
 
-    public PurchaseOrderItemController(PurchaseOrderItemService purchaseOrderItemService) {
+    public PurchaseOrderItemController(PurchaseOrderItemService purchaseOrderItemService, PurchaseOrderService purchaseOrderService) {
         this.service = purchaseOrderItemService;
+        this.purchaseOrderService = purchaseOrderService;
     }
 
-    @PostMapping("/create")
+    @PostMapping("/create/{orderId}")
     public ResponseEntity<ApiResponse<PurchaseOrderItems>> createPurchaseOrderItems(
-            @RequestBody PurchaseOrderItemDto purchaseOrderItemsDto) {
+            @RequestBody PurchaseOrderItemDto purchaseOrderItemsDto, @PathVariable String orderId) {
+        var purchaseOrder = purchaseOrderService.findPurchaseOrderById(orderId);
         ApiResponse<PurchaseOrderItems> response = new ApiResponse<>(
                 "Purchase order item created successfully",
                 HttpStatus.OK.value(),
                 LocalDateTime.now(),
-                service.createPurchaseOrderItem(purchaseOrderItemsDto));
+                service.createPurchaseOrderItem(purchaseOrderItemsDto, purchaseOrder));
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

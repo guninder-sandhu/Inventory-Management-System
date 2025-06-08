@@ -1,24 +1,33 @@
 package com.inventory.orderservice.services;
 
+import com.inventory.orderservice.dto.PurchaseOrderRequestDto;
 import com.inventory.orderservice.entities.PurchaseOrder;
 
 import java.util.List;
 
 public interface PurchaseOrderService {
 
-    boolean createPurchaseOrder(PurchaseOrder purchaseOrder);
+    PurchaseOrder createPurchaseOrder(PurchaseOrderRequestDto purchaseOrder);
 
-    boolean updatePurchaseOrder(PurchaseOrder purchaseOrder);
+    PurchaseOrder updatePurchaseOrder(PurchaseOrder purchaseOrder);
 
-    boolean deletePurchaseOrder(String id);
+    void deletePurchaseOrder(String id);
 
-    boolean deletePurchaseOrder(PurchaseOrder purchaseOrder);
+    void deletePurchaseOrder(PurchaseOrder purchaseOrder);
 
-    boolean deletePurchaseOrders(List<String> ids);
+    void deletePurchaseOrderByCode(String purchaseOrderCode);
+
+    void deletePurchaseOrders(List<String> ids);
 
     List<PurchaseOrder> findPurchaseOrdersByVendorId(String id);
 
-    boolean findPurchaseOrderById(String id);
+    PurchaseOrder findPurchaseOrderById(String id);
 
-    boolean findPurchaseOrderByIdAndVendorId(String id, String vendorId);
+    PurchaseOrder findPurchaseOrderByIdAndVendorId(String id, String vendorId);
+
+    PurchaseOrder findPurchaseOrderByCodeAndVendorCode(String orderCode, String vendorCode);
+
+    PurchaseOrder findPurchaseOrderByCode(String orderCode);
+
+    List<PurchaseOrder> findPurchaseOrderByVendorCode(String vendorCode);
 }
